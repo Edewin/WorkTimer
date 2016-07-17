@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/">
+        <file>imgs/arrows.png</file>
+        <file>imgs/mail.png</file>
+        <file>imgs/admin.png</file>
+        <file>imgs/alert.png</file>
+        <file>imgs/boss.png</file>
+        <file>imgs/calendar.png</file>
+        <file>imgs/comment.png</file>
+        <file>imgs/disc-floopy.png</file>
+        <file>imgs/error.png</file>
+        <file>imgs/home.png</file>
+        <file>imgs/hourglass.png</file>
+        <file>imgs/notepad.png</file>
+        <file>imgs/paper_mail.png</file>
+        <file>imgs/paperTimer.png</file>
+        <file>imgs/tick.png</file>
+        <file>imgs/users.png</file>
+        <file>imgs/TiMER-icon.png</file>
+        <file>imgs/Clock02.png</file>
+        <file>imgs/Clock-icon.png</file>
+    </qresource>
+</RCC>
