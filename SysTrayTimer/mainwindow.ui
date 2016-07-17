@@ -110,10 +110,25 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionHide"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionHide">
+   <property name="icon">
+    <iconset resource="imgs.qrc">
+     <normaloff>:/imgs/boss.png</normaloff>:/imgs/boss.png</iconset>
+   </property>
+   <property name="text">
+    <string>Hide</string>
+   </property>
+   <property name="shortcut">
+    <string>Esc</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="imgs.qrc"/>
+ </resources>
  <connections/>
 </ui>

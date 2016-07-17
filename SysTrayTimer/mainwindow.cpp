@@ -7,9 +7,21 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    this->hide();
+    // FramelessWindowHint
+    setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::CustomizeWindowHint);
+
+    // show time
+    systemTime = new QDateTime();
+    qDebug() << systemTime->currentDateTime().toString();
 
     comboIndex = FIRST_ELEMENT;
+
+    // add icons to combobox
+    ui->comboBox->addItem(QIcon(":/imgs/paperTimer.png"),tr("Pencil"));
+    ui->comboBox->addItem(QIcon(":/imgs/hourglass.png"),tr("Glass"));
+    ui->comboBox->addItem(QIcon(":/imgs/Clock-icon.png"),tr("3D"));
+    ui->comboBox->addItem(QIcon(":/imgs/TiMER-icon.png"),tr("Girl"));
+    ui->comboBox->addItem(QIcon(":/imgs/Clock02.png"),tr("B&W"));
 
     // configuration file
     configFile = new QFile("cfg.dat");
@@ -26,24 +38,22 @@ MainWindow::MainWindow(QWidget *parent) :
         qDebug() << "no data in cfg.dat";
 
         // write file header
-
         inOut << (quint32) HEADER_FILE;
         inOut << (quint32) comboIndex;
 
         configFile->flush();
         configFile->close();
-
     }
 
     else
     {
         // read configuration
+        qDebug() << "read configurations from cfg.dat";
         inOut >> comboIndex;
+        ui->comboBox->setCurrentIndex(comboIndex);
 
         configFile->close();
     }
-
-
 
     // center the MainWindow to screen
     QMainWindow::setGeometry(
@@ -55,19 +65,11 @@ MainWindow::MainWindow(QWidget *parent) :
                     )
                 );
 
-
-    // add icons to combobox
-    ui->comboBox->addItem(QIcon(":/imgs/paperTimer.png"),tr("Pencil"));
-    ui->comboBox->addItem(QIcon(":/imgs/hourglass.png"),tr("Glass"));
-    ui->comboBox->addItem(QIcon(":/imgs/Clock-icon.png"),tr("3D"));
-    ui->comboBox->addItem(QIcon(":imgs/TiMER-icon.png"),tr("Girl"));
-    ui->comboBox->addItem(QIcon(":/imgs/Clock02.png"),tr("B&W"));
-
     // connect signals
     typedef void (QComboBox::*QComboIntSignal)(int);
     connect(ui->comboBox, static_cast<QComboIntSignal>(&QComboBox::currentIndexChanged),
             this, &MainWindow::setIcon);
-
+    connect(ui->actionHide, &QAction::triggered, this, &QWidget::hide);
 
     //create tray icon and show it to the world
     createActions();
@@ -90,12 +92,12 @@ void MainWindow::setIcon(int index)
 {
     icon = ui->comboBox->itemIcon(index);
     trayIcon->setIcon(icon);
+
     setWindowIcon(icon);
 
     trayIcon->setToolTip(ui->comboBox->itemText(index));
 
     // write to cfg.dat the new index
-
     configFile->open(QIODevice::WriteOnly);
     QDataStream out(configFile);
 
@@ -138,4 +140,9 @@ void MainWindow::createTrayIcon()
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setContextMenu(trayIconMenu);
     trayIcon->setToolTip("time left");
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    setWindowIcon(icon);
 }

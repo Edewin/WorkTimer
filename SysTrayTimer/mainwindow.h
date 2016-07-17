@@ -7,9 +7,14 @@
 #include <QFile>
 #include <QDataStream>      // Configurations
 #include <QDesktopWidget> // center the window to screen
+#include <QElapsedTimer>
+#include <QDateTime>
+#include <QTimer>
+#include <QTime>
+#include "delay.h"
 
 #define FIRST_ELEMENT 0
-#define HEADER_FILE 0xE0D0A016
+const quint32 HEADER_FILE = 0xE0D0A016;
 #define VERSION 0
 
 namespace Ui {
@@ -27,6 +32,8 @@ public:
 private slots:
     void setIcon(int);
 
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -37,17 +44,19 @@ private:
 
     quint32 comboIndex;
 
-
     QFile *configFile;
 
     QAction *minimizeAction;
     QAction *maximizeAction;
     QAction *restoreAction;
     QAction *quitAction;
+
     QMenu *trayIconMenu;
 
     QIcon icon;
     QSystemTrayIcon *trayIcon;
+
+    QDateTime *systemTime;
 };
 
 #endif // MAINWINDOW_H
