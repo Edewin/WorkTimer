@@ -3,9 +3,14 @@
 
 #include <QMainWindow>
 #include <QSystemTrayIcon>
+#include <QDebug>
+#include <QFile>
+#include <QDataStream>      // Configurations
 #include <QDesktopWidget> // center the window to screen
 
 #define FIRST_ELEMENT 0
+#define HEADER_FILE 0xE0D0A016
+#define VERSION 0
 
 namespace Ui {
 class MainWindow;
@@ -29,6 +34,11 @@ private:
     void createTrayIcon();
 
     QAction *stringAction;
+
+    quint32 comboIndex;
+
+
+    QFile *configFile;
 
     QAction *minimizeAction;
     QAction *maximizeAction;

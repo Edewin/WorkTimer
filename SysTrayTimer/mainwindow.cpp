@@ -7,6 +7,44 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    this->hide();
+
+    comboIndex = FIRST_ELEMENT;
+
+    // configuration file
+    configFile = new QFile("cfg.dat");
+
+    configFile->open(QIODevice::ReadWrite);
+    QDataStream inOut(configFile);
+
+    // check if file containts data
+    quint32 headerFile = 0;
+    inOut >> headerFile;
+
+    if(headerFile != HEADER_FILE)
+    {
+        qDebug() << "no data in cfg.dat";
+
+        // write file header
+
+        inOut << (quint32) HEADER_FILE;
+        inOut << (quint32) comboIndex;
+
+        configFile->flush();
+        configFile->close();
+
+    }
+
+    else
+    {
+        // read configuration
+        inOut >> comboIndex;
+
+        configFile->close();
+    }
+
+
+
     // center the MainWindow to screen
     QMainWindow::setGeometry(
                 QStyle::alignedRect(
@@ -35,7 +73,7 @@ MainWindow::MainWindow(QWidget *parent) :
     createActions();
     createTrayIcon();
 
-    icon = ui->comboBox->itemIcon(FIRST_ELEMENT);
+    icon = ui->comboBox->itemIcon(comboIndex);
     trayIcon->setIcon(icon);
     setWindowIcon(icon);
 
@@ -55,6 +93,17 @@ void MainWindow::setIcon(int index)
     setWindowIcon(icon);
 
     trayIcon->setToolTip(ui->comboBox->itemText(index));
+
+    // write to cfg.dat the new index
+
+    configFile->open(QIODevice::WriteOnly);
+    QDataStream out(configFile);
+
+    out<< (quint32) HEADER_FILE;
+    out<< (quint32) index;
+
+    configFile->flush();
+    configFile->close();
 }
 
 void MainWindow::createActions()
