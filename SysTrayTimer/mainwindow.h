@@ -64,7 +64,7 @@ private:
     QIcon icon;
     QSystemTrayIcon *trayIcon;
 
-    QString remaining;
+    QString remainingStr;
 
     int remInt;
 

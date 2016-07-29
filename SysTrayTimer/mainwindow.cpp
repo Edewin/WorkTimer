@@ -164,8 +164,12 @@ void MainWindow::count()
     bufHours = buffer/ 3600;
     bufMinutes = (buffer-(bufHours*3600) ) /60;
 
-    ui->lineEdit_remainingTime->setText( QString::number(bufHours) + ":" +
-                                         QString::number(bufMinutes));
+    remainingStr = QString::number(bufHours) + ":" + QString::number(bufMinutes);
+
+    ui->lineEdit_remainingTime->setText( remainingStr );
+
+    trayIcon->setToolTip(remainingStr);
+    trayIcon->setObjectName( remainingStr );
 }
 
 void MainWindow::createActions()
