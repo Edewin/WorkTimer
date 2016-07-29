@@ -14,6 +14,10 @@
 #include "delay.h"
 
 #define FIRST_ELEMENT 0
+
+#define HOURS       8
+#define MINUTES     40
+
 const quint32 HEADER_FILE = 0xE0D0A016;
 #define VERSION 0
 
@@ -32,7 +36,11 @@ public:
 private slots:
     void setIcon(int);
 
-    void on_pushButton_clicked();
+    void count();
+
+    void on_pushButtonStart_clicked();
+
+    void on_pushButtonSTOP_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -56,7 +64,15 @@ private:
     QIcon icon;
     QSystemTrayIcon *trayIcon;
 
-    QDateTime *systemTime;
+    QString remaining;
+
+    int remInt;
+
+    QTime timeNow;
+    QTime timeToCount;
+    QTimer *counter;
+    QElapsedTimer   *countTime;
+    QDateTime *systemTimeDate;
 };
 
 #endif // MAINWINDOW_H

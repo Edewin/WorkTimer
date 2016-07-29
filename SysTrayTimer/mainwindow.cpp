@@ -11,8 +11,51 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::CustomizeWindowHint);
 
     // show time
-    systemTime = new QDateTime();
-    qDebug() << systemTime->currentDateTime().toString();
+
+//    ui->lineEdit_remainingTime->setText( timeNow.currentTime().toString() );
+
+    timeNow = timeNow.currentTime();
+
+    timeNow.start();
+
+    timeToCount = timeNow.addSecs( HOURS * 60 * 60 + MINUTES * 60 );
+
+    remInt = timeNow.secsTo(timeToCount);
+
+    if(remInt < 0)
+    {
+        timeToCount = timeNow.addSecs( -HOURS * 60 * 60 - MINUTES * 60 );
+        remInt = timeNow.secsTo(timeToCount);
+
+        if(remInt < 0)
+        {
+            remInt = -remInt;
+        }
+    }
+
+
+
+    qDebug("Remaining time is: %d s", remInt);
+
+
+    ui->lineEdit_remainingTime->setText( timeToCount.toString() );
+
+
+    systemTimeDate = new QDateTime();
+    QString currentTime = systemTimeDate->currentDateTime().toString() ;
+    qDebug() << currentTime;
+
+    countTime = new QElapsedTimer();
+
+
+
+
+    // counter Timer
+    counter = new QTimer(this);
+    counter->setInterval(1000);
+    connect(counter, SIGNAL(timeout()), this, SLOT(count()) );
+    counter->start();
+
 
     comboIndex = FIRST_ELEMENT;
 
@@ -108,6 +151,23 @@ void MainWindow::setIcon(int index)
     configFile->close();
 }
 
+void MainWindow::count()
+{
+    qDebug()<< "time Elapsed is: " + QString::number( timeNow.elapsed() / 1000 );
+
+    int ElapsedTime = timeNow.elapsed() / 1000;
+
+    int buffer = remInt - ElapsedTime;
+
+    int bufHours, bufMinutes;
+
+    bufHours = buffer/ 3600;
+    bufMinutes = (buffer-(bufHours*3600) ) /60;
+
+    ui->lineEdit_remainingTime->setText( QString::number(bufHours) + ":" +
+                                         QString::number(bufMinutes));
+}
+
 void MainWindow::createActions()
 {
     stringAction = new QAction(tr("&Time Left"),this);
@@ -142,7 +202,15 @@ void MainWindow::createTrayIcon()
     trayIcon->setToolTip("time left");
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_pushButtonStart_clicked()
 {
-    setWindowIcon(icon);
+    if(!counter->isActive())
+    {
+        counter->start();
+    }
+}
+
+void MainWindow::on_pushButtonSTOP_clicked()
+{
+    counter->stop();
 }

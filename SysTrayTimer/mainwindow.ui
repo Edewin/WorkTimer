@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>344</width>
-    <height>271</height>
+    <width>324</width>
+    <height>196</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -39,12 +39,26 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEditTotalTime"/>
+         <widget class="QLineEdit" name="lineEditTotalTime">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>8:40</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="pushButtonStart">
         <property name="text">
          <string>Start</string>
         </property>
@@ -64,12 +78,24 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_remainingTime"/>
+         <widget class="QLineEdit" name="lineEdit_remainingTime">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+            <weight>75</weight>
+            <italic>true</italic>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="pushButtonSTOP">
         <property name="text">
          <string>Stop</string>
         </property>
@@ -98,7 +124,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>344</width>
+     <width>324</width>
      <height>19</height>
     </rect>
    </property>
