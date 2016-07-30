@@ -10,22 +10,15 @@ MainWindow::MainWindow(QWidget *parent) :
     // FramelessWindowHint
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::CustomizeWindowHint);
 
-    // show time
-
-//    ui->lineEdit_remainingTime->setText( timeNow.currentTime().toString() );
-
+    // get current time
     timeNow = timeNow.currentTime();
-
     timeNow.start();
 
-    timeToCount = timeNow.addSecs( HOURS * 60 * 60 + MINUTES * 60 );
-
-    remInt = timeNow.secsTo(timeToCount);
+    remInt = getTimeToCount(HOURS, MINUTES);
 
     if(remInt < 0)
     {
-        timeToCount = timeNow.addSecs( -HOURS * 60 * 60 - MINUTES * 60 );
-        remInt = timeNow.secsTo(timeToCount);
+        remInt = getTimeToCount(-HOURS, -MINUTES);
 
         if(remInt < 0)
         {
@@ -38,17 +31,9 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug("Remaining time is: %d s", remInt);
 
 
-    ui->lineEdit_remainingTime->setText( timeToCount.toString() );
-
-
     systemTimeDate = new QDateTime();
     QString currentTime = systemTimeDate->currentDateTime().toString() ;
     qDebug() << currentTime;
-
-    countTime = new QElapsedTimer();
-
-
-
 
     // counter Timer
     counter = new QTimer(this);
@@ -159,17 +144,29 @@ void MainWindow::count()
 
     int buffer = remInt - ElapsedTime;
 
-    int bufHours, bufMinutes;
+    int bufHours, bufMinutes, bufSeconds;
+
+    if(buffer == 0)
+    {
+        timeToGoHome();
+    }
+
+    if(buffer < 0)
+    {
+        buffer = -buffer;
+        ui->label_RemOrOver->setText("Overtime: ");
+    }
 
     bufHours = buffer/ 3600;
     bufMinutes = (buffer-(bufHours*3600) ) /60;
+    bufSeconds = buffer - (bufHours*3600) - (bufMinutes*60);
 
-    remainingStr = QString::number(bufHours) + ":" + QString::number(bufMinutes);
+    remainingStr = QString::number(bufHours) + ":" + QString::number(bufMinutes) +
+                   ":" + QString::number(bufSeconds);
 
     ui->lineEdit_remainingTime->setText( remainingStr );
 
-    trayIcon->setToolTip(remainingStr);
-    trayIcon->setObjectName( remainingStr );
+    trayIcon->setToolTip( ui->label_RemOrOver->text() + remainingStr);
 }
 
 void MainWindow::createActions()
@@ -204,6 +201,27 @@ void MainWindow::createTrayIcon()
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setContextMenu(trayIconMenu);
     trayIcon->setToolTip("time left");
+}
+
+void MainWindow::timeToGoHome()
+{
+    QMessageBox msgBox;
+    msgBox.setText( tr("Time to go home!"));
+    QSize size;
+    size.setHeight(300);
+    size.setWidth(300);
+    msgBox.setIconPixmap(trayIcon->icon().pixmap(size));
+    msgBox.exec();
+}
+
+int MainWindow::getTimeToCount(int hours, int minutes)
+{
+    int seconds = 0;
+
+    timeToCount = timeNow.addSecs( hours * 60 * 60 + minutes * 60 );
+    seconds = timeNow.secsTo(timeToCount);
+
+    return seconds;
 }
 
 void MainWindow::on_pushButtonStart_clicked()
