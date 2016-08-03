@@ -7,6 +7,15 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // GIFs area
+
+    gif1 = new QMovie("/imgs/3dhead.gif");
+
+    label = new QLabel(this);
+    label->setAlignment(Qt::AlignBottom);
+    ui->label_GIF->setMovie(gif1);
+    gif1->start();
+
     // FramelessWindowHint
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::CustomizeWindowHint);
 
@@ -226,6 +235,8 @@ int MainWindow::getTimeToCount(int hours, int minutes)
 
 void MainWindow::on_pushButtonStart_clicked()
 {
+    gif1->start();
+
     if(!counter->isActive())
     {
         counter->start();
@@ -234,5 +245,7 @@ void MainWindow::on_pushButtonStart_clicked()
 
 void MainWindow::on_pushButtonSTOP_clicked()
 {
+    gif1->stop();
+
     counter->stop();
 }

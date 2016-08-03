@@ -12,6 +12,7 @@
 #include <QMessageBox>
 #include <QTimer>
 #include <QTime>
+#include <QMovie>
 #include "delay.h"
 
 #define FIRST_ELEMENT 0
@@ -66,6 +67,14 @@ private:
     QAction *maximizeAction;
     QAction *restoreAction;
     QAction *quitAction;
+
+    // GIFs area
+
+    QMovie *gif1;
+    QMovie *gif2;
+    QLabel *label;
+
+    // end of GIFs area
 
     QMenu *trayIconMenu;
 
