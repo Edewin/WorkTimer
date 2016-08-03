@@ -11,6 +11,8 @@ WorkTimer
 - [ ] Break notify for every 50 minutes
 - [ ] Launch break after a **settable** time
 - [ ] Different languages 
+- [ ] Drag&Drop function to add your favorite icon (check GIF too)
+
 
 # Bugs:
-- [ ] Program crashes if mainwindow is hidden when messagebox is shown for timeToGoHome
+- [x] Program crashes if mainwindow is hidden when messagebox is shown for timeToGoHome
