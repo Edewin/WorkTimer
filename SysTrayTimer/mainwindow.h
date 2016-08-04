@@ -12,12 +12,8 @@
 #include <QMessageBox>
 #include <QTimer>
 #include <QTime>
-#include "delay.h"
 
 #define FIRST_ELEMENT 0
-
-#define HOURS       0
-#define MINUTES     1
 
 const quint32 HEADER_FILE = 0xE0D0A016;
 #define VERSION 0
@@ -43,6 +39,12 @@ private slots:
 
     void on_pushButtonSTOP_clicked();
 
+    void on_doubleSpinBox_Hours_valueChanged(double arg1);
+
+    void on_doubleSpinBox_Minutes_valueChanged(double arg1);
+
+    void on_doubleSpinBox_Seconds_valueChanged(double arg1);
+
 private:
     Ui::MainWindow *ui;
 
@@ -51,10 +53,16 @@ private:
 
     void timeToGoHome();
 
-    /*
-     *  This function returns seconds for the time you need
-    */
-    int getTimeToCount(int hours, int minutes);
+
+    // Counter Area
+
+    //This function returns seconds for the time you need
+    int getTimeToCount(int hrs);
+    int getTimeToCount(int hrs, int mins);
+    int getTimeToCount(int hrs, int mins, int secs);
+
+    int hours, minutes, seconds;
+
 
     QAction *stringAction;
 

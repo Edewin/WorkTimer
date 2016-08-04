@@ -15,4 +15,4 @@ WorkTimer
 
 
 # Bugs:
-- [x] Program crashes if mainwindow is hidden when messagebox is shown for timeToGoHome
+1. [x]  Program crashes if mainwindow is hidden when messagebox is shown for timeToGoHome 

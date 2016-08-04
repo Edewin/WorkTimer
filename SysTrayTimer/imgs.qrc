@@ -19,5 +19,13 @@
         <file>imgs/TiMER-icon.png</file>
         <file>imgs/Clock02.png</file>
         <file>imgs/Clock-icon.png</file>
+        <file>imgs/flags/France.ico</file>
+        <file>imgs/flags/France.png</file>
+        <file>imgs/flags/Germany.ico</file>
+        <file>imgs/flags/Germany.png</file>
+        <file>imgs/flags/Romania.ico</file>
+        <file>imgs/flags/Romania.png</file>
+        <file>imgs/flags/United-Kingdom.ico</file>
+        <file>imgs/flags/United-Kingdom.png</file>
     </qresource>
 </RCC>

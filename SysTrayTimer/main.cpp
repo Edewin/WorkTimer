@@ -6,7 +6,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
 
-    a.setQuitOnLastWindowClosed(false); // bug fix
+   // a.setQuitOnLastWindowClosed(false); // bug(1) fix
 
     w.show();
 

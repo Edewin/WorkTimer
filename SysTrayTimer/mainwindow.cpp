@@ -7,18 +7,27 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    qApp->setQuitLockEnabled(false); // another way to fix the bug(1) with
+
+                                    //program crash when mainwindow is hidden
+
     // FramelessWindowHint
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::CustomizeWindowHint);
 
     // get current time
+
+    hours = ui->doubleSpinBox_Hours->value();
+    minutes = ui->doubleSpinBox_Minutes->value();
+    seconds = ui->doubleSpinBox_Seconds->value();
+
     timeNow = timeNow.currentTime();
     timeNow.start();
 
-    remInt = getTimeToCount(HOURS, MINUTES);
+    remInt = getTimeToCount(hours, minutes, seconds);
 
     if(remInt < 0)
     {
-        remInt = getTimeToCount(-HOURS, -MINUTES);
+        remInt = getTimeToCount(-hours, -minutes, -seconds);
 
         if(remInt < 0)
         {
@@ -44,7 +53,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     comboIndex = FIRST_ELEMENT;
 
-    // add icons to combobox
+    // add icons to comboboxes
+
+    // Language Tab
+    ui->comboBox_Languages->addItem(QIcon(":/imgs/flags/United-Kingdom.png"), tr("English"));
+    ui->comboBox_Languages->addItem(QIcon(":/imgs/flags/Romania.png"), tr("Română"));
+    ui->comboBox_Languages->addItem(QIcon(":/imgs/flags/Germany.png"), tr("Deutsch"));
+    ui->comboBox_Languages->addItem(QIcon(":/imgs/flags/France.png"), tr("Francais"));
+
+    // Personalize Tab
     ui->comboBox->addItem(QIcon(":/imgs/paperTimer.png"),tr("Pencil"));
     ui->comboBox->addItem(QIcon(":/imgs/hourglass.png"),tr("Glass"));
     ui->comboBox->addItem(QIcon(":/imgs/Clock-icon.png"),tr("3D"));
@@ -138,7 +155,7 @@ void MainWindow::setIcon(int index)
 
 void MainWindow::count()
 {
-    qDebug()<< "time Elapsed is: " + QString::number( timeNow.elapsed() / 1000 );
+    //qDebug()<< "time Elapsed is: " + QString::number( timeNow.elapsed() / 1000 );
 
     int ElapsedTime = timeNow.elapsed() / 1000;
 
@@ -206,22 +223,33 @@ void MainWindow::createTrayIcon()
 void MainWindow::timeToGoHome()
 {
     QMessageBox msgBox;
-    msgBox.setText( tr("Time to go home!"));
     QSize size;
-    size.setHeight(300);
-    size.setWidth(300);
+    size.setHeight(200);
+    size.setWidth(200);
     msgBox.setIconPixmap(trayIcon->icon().pixmap(size));
+    msgBox.setText( tr("Time to go home!"));
     msgBox.exec();
 }
 
-int MainWindow::getTimeToCount(int hours, int minutes)
+int MainWindow::getTimeToCount(int hrs)
 {
-    int seconds = 0;
+    timeToCount = timeNow.addSecs( hrs * 60 * 60 );
 
-    timeToCount = timeNow.addSecs( hours * 60 * 60 + minutes * 60 );
-    seconds = timeNow.secsTo(timeToCount);
+    return timeNow.secsTo(timeToCount);
+}
 
-    return seconds;
+int MainWindow::getTimeToCount(int hrs, int mins)
+{
+    timeToCount = timeNow.addSecs( hrs * 60 * 60 + mins * 60 );
+
+    return timeNow.secsTo(timeToCount);
+}
+
+int MainWindow::getTimeToCount(int hrs, int mins, int secs)
+{
+    timeToCount = timeNow.addSecs( hrs * 60 * 60 + mins * 60 + secs );
+
+    return timeNow.secsTo(timeToCount);
 }
 
 void MainWindow::on_pushButtonStart_clicked()
@@ -229,10 +257,50 @@ void MainWindow::on_pushButtonStart_clicked()
     if(!counter->isActive())
     {
         counter->start();
+
+        // get the time now and recalculate the time to count from new hours value
+        timeNow = timeNow.currentTime();
+        timeNow.restart();
+
+        remInt = getTimeToCount(hours, minutes, seconds);
+
+        // disable counter start button and time edit
+        ui->doubleSpinBox_Hours->setEnabled(false);
+        ui->doubleSpinBox_Minutes->setEnabled(false);
+        ui->doubleSpinBox_Seconds->setEnabled(false);
+        ui->pushButtonStart->setEnabled(false);
+        ui->pushButtonSTOP->setEnabled(true);
     }
 }
 
 void MainWindow::on_pushButtonSTOP_clicked()
 {
-    counter->stop();
+    if(counter->isActive())
+    {
+        counter->stop();
+
+        // enable counter start button and time edit
+        ui->doubleSpinBox_Hours->setEnabled(true);
+        ui->doubleSpinBox_Minutes->setEnabled(true);
+        ui->doubleSpinBox_Seconds->setEnabled(true);
+        ui->pushButtonStart->setEnabled(true);
+        ui->pushButtonSTOP->setEnabled(false);
+    }
+
+
+}
+
+void MainWindow::on_doubleSpinBox_Hours_valueChanged(double arg1)
+{
+    hours = static_cast<int>(arg1);
+}
+
+void MainWindow::on_doubleSpinBox_Minutes_valueChanged(double arg1)
+{
+    minutes = static_cast<int>(arg1);
+}
+
+void MainWindow::on_doubleSpinBox_Seconds_valueChanged(double arg1)
+{
+    seconds = static_cast<int>(arg1);
 }
