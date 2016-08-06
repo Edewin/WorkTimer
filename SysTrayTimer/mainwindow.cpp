@@ -10,6 +10,9 @@ MainWindow::MainWindow(QWidget *parent) :
     qApp->setQuitLockEnabled(false); // another way to fix the bug(1) with
 
                                     //program crash when mainwindow is hidden
+    translator.load("test");
+    qApp->installTranslator(&translator);
+
 
     // FramelessWindowHint
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::CustomizeWindowHint);
@@ -303,4 +306,9 @@ void MainWindow::on_doubleSpinBox_Minutes_valueChanged(double arg1)
 void MainWindow::on_doubleSpinBox_Seconds_valueChanged(double arg1)
 {
     seconds = static_cast<int>(arg1);
+}
+
+void MainWindow::on_comboBox_Languages_currentIndexChanged(int index)
+{
+    // ToDo add language in future
 }

@@ -10,6 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = SysTrayTimer
 TEMPLATE = app
+TRANSLATIONS = test.ts
 
 
 SOURCES += main.cpp\
@@ -21,3 +22,4 @@ FORMS    += mainwindow.ui
 
 RESOURCES += \
     imgs.qrc
+

@@ -13,6 +13,8 @@
 #include <QTimer>
 #include <QTime>
 
+#include <QTranslator>
+
 #define FIRST_ELEMENT 0
 
 const quint32 HEADER_FILE = 0xE0D0A016;
@@ -25,10 +27,14 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+    Q_ENUMS(Languages)
 
 public:
     explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    ~MainWindow();  
+
+
+    enum class Languages {English, Romanian, German, French };
 
 private slots:
     void setIcon(int);
@@ -44,6 +50,8 @@ private slots:
     void on_doubleSpinBox_Minutes_valueChanged(double arg1);
 
     void on_doubleSpinBox_Seconds_valueChanged(double arg1);
+
+    void on_comboBox_Languages_currentIndexChanged(int index);
 
 private:
     Ui::MainWindow *ui;
