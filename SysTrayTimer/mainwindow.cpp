@@ -8,13 +8,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     qApp->setQuitLockEnabled(false); // another way to fix the bug(1) with
-
                                     //program crash when mainwindow is hidden
 
     // FramelessWindowHint
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::CustomizeWindowHint);
 
-    // get current time
+    // get current time and time to count
 
     hours = ui->doubleSpinBox_Hours->value();
     minutes = ui->doubleSpinBox_Minutes->value();
@@ -23,19 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     timeNow = timeNow.currentTime();
     timeNow.start();
 
-    remInt = getTimeToCount(hours, minutes, seconds);
-
-    if(remInt < 0)
-    {
-        remInt = getTimeToCount(-hours, -minutes, -seconds);
-
-        if(remInt < 0)
-        {
-            remInt = -remInt;
-        }
-    }
-
-
+    updateRemInt();
 
     qDebug("Remaining time is: %d s", remInt);
 
@@ -80,11 +67,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     if(headerFile != HEADER_FILE)
     {
-        qDebug() << "no data in cfg.dat";
+        //qDebug() << "no data in cfg.dat";
 
         // write file header
         inOut << (quint32) HEADER_FILE;
         inOut << (quint32) comboIndex;
+        inOut << (qint32) remInt;
 
         configFile->flush();
         configFile->close();
@@ -92,10 +80,31 @@ MainWindow::MainWindow(QWidget *parent) :
 
     else
     {
+        //qDebug() << "read configurations from cfg.dat";
+
         // read configuration
-        qDebug() << "read configurations from cfg.dat";
         inOut >> comboIndex;
+        inOut >> remInt;
+
+        qDebug("remInt from cfg.dat is: %d", remInt);
+
         ui->comboBox->setCurrentIndex(comboIndex);
+
+        // update doubleSpinBoxes with the value read from file
+        int bufHours, bufMinutes, bufSeconds;
+
+        if(remInt < 0)
+        {
+            ui->label_RemOrOver->setText( tr("Overtime: ") );
+        }
+
+        bufHours = remInt/ 3600;
+        bufMinutes = (remInt-(bufHours*3600) ) /60;
+        bufSeconds = remInt - (bufHours*3600) - (bufMinutes*60);
+
+        ui->doubleSpinBox_Hours->setValue(bufHours);
+        ui->doubleSpinBox_Minutes->setValue(bufMinutes);
+        ui->doubleSpinBox_Seconds->setValue(bufSeconds);
 
         configFile->close();
     }
@@ -129,12 +138,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    remInt = remInt - (timeNow.elapsed() /1000 );
+
+    writeToCfgFile(comboIndex, remInt);
+
     delete ui;
 }
 
 
 void MainWindow::setIcon(int index)
 {
+    comboIndex = index;
+
     icon = ui->comboBox->itemIcon(index);
     trayIcon->setIcon(icon);
 
@@ -143,14 +158,7 @@ void MainWindow::setIcon(int index)
     trayIcon->setToolTip(ui->comboBox->itemText(index));
 
     // write to cfg.dat the new index
-    configFile->open(QIODevice::WriteOnly);
-    QDataStream out(configFile);
-
-    out<< (quint32) HEADER_FILE;
-    out<< (quint32) index;
-
-    configFile->flush();
-    configFile->close();
+    writeToCfgFile(index, remInt);
 }
 
 void MainWindow::count()
@@ -172,6 +180,10 @@ void MainWindow::count()
     {
         buffer = -buffer;
         ui->label_RemOrOver->setText("Overtime: ");
+    }
+    else
+    {
+        ui->label_RemOrOver->setText("Remaining Time: ");
     }
 
     bufHours = buffer/ 3600;
@@ -231,6 +243,19 @@ void MainWindow::timeToGoHome()
     msgBox.exec();
 }
 
+void MainWindow::writeToCfgFile(quint32 iconIndex, qint32 remainingTime)
+{
+    configFile->open(QIODevice::WriteOnly);
+    QDataStream out(configFile);
+
+    out<< (quint32) HEADER_FILE;
+    out<< (quint32) iconIndex;
+    out<< (qint32) remainingTime;
+
+    configFile->flush();
+    configFile->close();
+}
+
 int MainWindow::getTimeToCount(int hrs)
 {
     timeToCount = timeNow.addSecs( hrs * 60 * 60 );
@@ -252,6 +277,22 @@ int MainWindow::getTimeToCount(int hrs, int mins, int secs)
     return timeNow.secsTo(timeToCount);
 }
 
+void MainWindow::updateRemInt()
+{
+    remInt = getTimeToCount(hours, minutes, seconds);
+
+    if(remInt < 0)
+    {
+        remInt = getTimeToCount(-hours, -minutes, -seconds);
+
+        if(remInt < 0)
+        {
+            remInt = -remInt;
+        }
+    }
+
+}
+
 void MainWindow::on_pushButtonStart_clicked()
 {
     if(!counter->isActive())
@@ -262,7 +303,9 @@ void MainWindow::on_pushButtonStart_clicked()
         timeNow = timeNow.currentTime();
         timeNow.restart();
 
-        remInt = getTimeToCount(hours, minutes, seconds);
+        updateRemInt();
+
+        writeToCfgFile( comboIndex, remInt );
 
         // disable counter start button and time edit
         ui->doubleSpinBox_Hours->setEnabled(false);
@@ -286,8 +329,6 @@ void MainWindow::on_pushButtonSTOP_clicked()
         ui->pushButtonStart->setEnabled(true);
         ui->pushButtonSTOP->setEnabled(false);
     }
-
-
 }
 
 void MainWindow::on_doubleSpinBox_Hours_valueChanged(double arg1)
@@ -303,4 +344,9 @@ void MainWindow::on_doubleSpinBox_Minutes_valueChanged(double arg1)
 void MainWindow::on_doubleSpinBox_Seconds_valueChanged(double arg1)
 {
     seconds = static_cast<int>(arg1);
+}
+
+void MainWindow::on_comboBox_Languages_currentIndexChanged(int index)
+{
+    // ToDo add language in future
 }

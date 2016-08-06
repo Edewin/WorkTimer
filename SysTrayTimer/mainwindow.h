@@ -28,7 +28,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    ~MainWindow();  
 
 private slots:
     void setIcon(int);
@@ -45,6 +45,8 @@ private slots:
 
     void on_doubleSpinBox_Seconds_valueChanged(double arg1);
 
+    void on_comboBox_Languages_currentIndexChanged(int index);
+
 private:
     Ui::MainWindow *ui;
 
@@ -52,6 +54,8 @@ private:
     void createTrayIcon();
 
     void timeToGoHome();
+
+    void writeToCfgFile(quint32 iconIndex, qint32 remainingTime);
 
 
     // Counter Area
@@ -61,8 +65,10 @@ private:
     int getTimeToCount(int hrs, int mins);
     int getTimeToCount(int hrs, int mins, int secs);
 
-    int hours, minutes, seconds;
+    // update the value of remInt and if negative makes it positive
+    void updateRemInt();
 
+    quint8 hours, minutes, seconds;
 
     QAction *stringAction;
 
@@ -82,7 +88,7 @@ private:
 
     QString remainingStr;
 
-    int remInt;
+    qint32 remInt;
 
     QTime timeNow;
     QTime timeToCount;
