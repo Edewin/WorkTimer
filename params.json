@@ -1,0 +1,6 @@
+{
+  "name": "Worktimer",
+  "tagline": "WorkTimer",
+  "body": "# WorkTimer\r\nWorkTimer\r\n\r\n# Desired Features:\r\n- [ ] Write in file : \r\n1. - [ ] time to count\r\n2. - [x] desired icon\r\n- [ ] Log for work\r\n1. - [ ] Another window for showing graphically working history\r\n2. - [ ] Total overtime\r\n- [ ] Break notify for every 50 minutes\r\n- [ ] Launch break after a **settable** time\r\n- [ ] Different languages \r\n- [ ] Drag&Drop function to add your favorite icon (check GIF too)\r\n\r\n\r\n# Bugs:\r\n1. [x]  Program crashes if mainwindow is hidden when messagebox is shown for timeToGoHome ",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
