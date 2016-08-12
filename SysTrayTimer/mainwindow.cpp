@@ -49,11 +49,35 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->comboBox_Languages->addItem(QIcon(":/imgs/flags/France.png"), tr("Francais"));
 
     // Personalize Tab
+
+    // Add icons
     ui->comboBox->addItem(QIcon(":/imgs/paperTimer.png"),tr("Pencil"));
     ui->comboBox->addItem(QIcon(":/imgs/hourglass.png"),tr("Glass"));
     ui->comboBox->addItem(QIcon(":/imgs/Clock-icon.png"),tr("3D"));
     ui->comboBox->addItem(QIcon(":/imgs/TiMER-icon.png"),tr("Girl"));
     ui->comboBox->addItem(QIcon(":/imgs/Clock02.png"),tr("B&W"));
+
+    // Add GIFs
+
+    gifsList << ":/imgs/gifs/clear.gif" << ":/imgs/gifs/cry.gif"
+             << ":/imgs/gifs/Foam-Heart.gif" << ":/imgs/gifs/friendfsgif"
+             << ":/imgs/gifs/giphy.gif" <<  ":/imgs/gifs/giphyElectric.gif"
+             << ":/imgs/gifs/go.gif" << ":/imgs/gifs/gohme.gif"
+             << ":/imgs/gifs/Golf-Ball.gif" << ":/imgs/gifs/sleepy.gif"
+             << ":/imgs/gifs/tumblr_inline.gif" << ":/imgs/gifs/wGDqq.gif";
+
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/clear.gif"), tr("clear"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/cry.gif"), tr("cry"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/Foam-Heart.gif"), tr("heart coffee"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/friendfsgif"), tr("friends fan"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/giphy.gif"), tr("giphy"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/giphyElectric.gif"), tr("electric"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/go.gif"), tr("just go"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/gohme.gif"), tr("go home"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/Golf-Ball.gif"), tr("golf"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/sleepy.gif"), tr("sleepy"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/tumblr_inline.gif"), tr("woman"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/wGDqq.gif"), tr("work done"));
 
     // configuration file
     configFile = new QFile("cfg.dat");
@@ -349,4 +373,26 @@ void MainWindow::on_doubleSpinBox_Seconds_valueChanged(double arg1)
 void MainWindow::on_comboBox_Languages_currentIndexChanged(int index)
 {
     // ToDo add language in future
+}
+
+void MainWindow::on_comboBox_Gifs_currentIndexChanged(int index)
+{
+//    qDebug("index from gifs changed");
+
+}
+
+void MainWindow::on_gifTestButton_clicked()
+{
+    goHome *homeUI = new goHome(this);
+
+    homeUI->gif = new QMovie(gifsList.at(ui->comboBox_Gifs->currentIndex()));
+    homeUI->gifContainer->setMovie(homeUI->gif);
+    homeUI->gif->start();
+
+
+    if(homeUI->exec())
+    {
+    }
+
+    delete homeUI;
 }

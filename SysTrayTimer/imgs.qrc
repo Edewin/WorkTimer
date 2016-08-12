@@ -27,5 +27,17 @@
         <file>imgs/flags/Romania.png</file>
         <file>imgs/flags/United-Kingdom.ico</file>
         <file>imgs/flags/United-Kingdom.png</file>
+        <file>imgs/gifs/clear.gif</file>
+        <file>imgs/gifs/cry.gif</file>
+        <file>imgs/gifs/Foam-Heart.gif</file>
+        <file>imgs/gifs/friendfsgif</file>
+        <file>imgs/gifs/giphy.gif</file>
+        <file>imgs/gifs/giphyElectric.gif</file>
+        <file>imgs/gifs/go.gif</file>
+        <file>imgs/gifs/gohme.gif</file>
+        <file>imgs/gifs/Golf-Ball.gif</file>
+        <file>imgs/gifs/sleepy.gif</file>
+        <file>imgs/gifs/tumblr_inline.gif</file>
+        <file>imgs/gifs/wGDqq.gif</file>
     </qresource>
 </RCC>

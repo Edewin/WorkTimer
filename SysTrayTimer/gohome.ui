@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>goHome</class>
+ <widget class="QDialog" name="goHome">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>41</width>
+    <height>38</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Work Done!!!</string>
+  </property>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

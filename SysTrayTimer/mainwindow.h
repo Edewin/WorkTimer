@@ -7,11 +7,14 @@
 #include <QFile>
 #include <QDataStream>      // Configurations
 #include <QDesktopWidget> // center the window to screen
+#include <QStringList>
 
 #include <QDateTime>
 #include <QMessageBox>
 #include <QTimer>
 #include <QTime>
+
+#include "gohome.h"
 
 #define FIRST_ELEMENT 0
 
@@ -47,6 +50,10 @@ private slots:
 
     void on_comboBox_Languages_currentIndexChanged(int index);
 
+    void on_comboBox_Gifs_currentIndexChanged(int index);
+
+    void on_gifTestButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -56,6 +63,9 @@ private:
     void timeToGoHome();
 
     void writeToCfgFile(quint32 iconIndex, qint32 remainingTime);
+
+    // GIFs
+    QStringList gifsList;
 
 
     // Counter Area
