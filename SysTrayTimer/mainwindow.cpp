@@ -162,7 +162,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    remInt = remInt - (timeNow.elapsed() /1000 );
+    remInt = remInt - (timeNow.elapsed() / 1000 );
 
     writeToCfgFile(comboIndex, remInt);
 
@@ -213,6 +213,15 @@ void MainWindow::count()
     bufHours = buffer/ 3600;
     bufMinutes = (buffer-(bufHours*3600) ) /60;
     bufSeconds = buffer - (bufHours*3600) - (bufMinutes*60);
+
+    if(ui->checkBox50MinBreak->isChecked())
+    {
+        if(bufMinutes == 50)
+        {
+            trayIcon->showMessage( tr("Short break!"),
+                                   tr("For your healthy, you should take a short break!"));
+        }
+    }
 
     remainingStr = QString::number(bufHours) + ":" + QString::number(bufMinutes) +
                    ":" + QString::number(bufSeconds);
@@ -388,7 +397,7 @@ void MainWindow::on_gifTestButton_clicked()
     homeUI->gif = new QMovie(gifsList.at(ui->comboBox_Gifs->currentIndex()));
     homeUI->gifContainer->setMovie(homeUI->gif);
     homeUI->gif->start();
-
+    homeUI->setOrientation(Qt::Vertical);
 
     if(homeUI->exec())
     {

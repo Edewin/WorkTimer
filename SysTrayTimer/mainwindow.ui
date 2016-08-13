@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>281</height>
+    <height>300</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -30,7 +30,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>3</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="TabCount">
        <attribute name="title">
@@ -241,7 +241,7 @@
        <attribute name="title">
         <string>Breaks</string>
        </attribute>
-       <widget class="QCheckBox" name="checkBox">
+       <widget class="QCheckBox" name="checkBox50MinBreak">
         <property name="geometry">
          <rect>
           <x>20</x>
@@ -381,7 +381,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>19</height>
+     <height>27</height>
     </rect>
    </property>
   </widget>

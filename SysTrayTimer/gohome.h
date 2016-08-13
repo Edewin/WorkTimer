@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QtCore>
 #include <QtGui>
+#include <QDesktopWidget> // center the window to screen
 
 #include <QVBoxLayout>
 #include <QLabel>
