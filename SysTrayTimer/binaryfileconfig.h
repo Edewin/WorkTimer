@@ -3,14 +3,13 @@
 
 #include <QtCore>
 #include <QFile>
+#include <QDir>
 #include <QDataStream>
-
-
 
 class BinaryFileConfig
 {
 public:
-    explicit BinaryFileConfig();
+    explicit BinaryFileConfig(const QString filename);
     ~BinaryFileConfig();
 
     // write to cfg. file
@@ -22,6 +21,9 @@ public:
     void write_DesiredIcon(quint32 comboIconIndex);
     void write_DesiredGIF(quint32 comboGifIndex);
 
+    void initVariables();
+
+    quint32 readHeaderFile();
     qint32 read_TimeToCount();
     qint32 read_RemainingTime();
     quint32 read_DesiredLanguage();
@@ -33,6 +35,20 @@ public:
 private:
     void openFileForRead();
     void openFileForWrite();
+
+    void updateAllVariables();
+    void readAllVariables();
+
+
+    // variables
+    quint32 HEADER_FILE;
+    qint32 timeToCount, remainingTime;
+    quint32 desiredLanguage, desiredIcon, desiredGif;
+    bool shortBreakActive, launchBreakActive;
+
+
+    // file
+    QFile *mFile;
 };
 
 #endif // BINARYFILECONFIG_H

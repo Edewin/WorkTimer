@@ -80,35 +80,40 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/wGDqq.gif"), tr("work done"));
 
     // configuration file
-    configFile = new QFile("cfg.dat");
+//    configFile = new QFile("cfg.dat");
+    cfgFile = new BinaryFileConfig("cfg.dat");
 
-    configFile->open(QIODevice::ReadWrite);
-    QDataStream inOut(configFile);
+//    configFile->open(QIODevice::ReadWrite);
+//    QDataStream inOut(configFile);
 
-    // check if file containts data
+//    // check if file containts data
     quint32 headerFile = 0;
-    inOut >> headerFile;
+
+    headerFile = cfgFile->readHeaderFile();
 
     if(headerFile != HEADER_FILE)
     {
-        //qDebug() << "no data in cfg.dat";
+        qDebug() << "no data in cfg.dat";
 
         // write file header
-        inOut << (quint32) HEADER_FILE;
-        inOut << (quint32) comboIndex;
-        inOut << (qint32) remInt;
+        cfgFile->initVariables();
+//        inOut << (quint32) HEADER_FILE;
+//        inOut << (quint32) comboIndex;
+//        inOut << (qint32) remInt;
 
-        configFile->flush();
-        configFile->close();
+//        configFile->flush();
+//        configFile->close();
     }
 
     else
     {
-        //qDebug() << "read configurations from cfg.dat";
+        qDebug() << "read configurations from cfg.dat";
 
         // read configuration
-        inOut >> comboIndex;
-        inOut >> remInt;
+//        inOut >> comboIndex;
+//        inOut >> remInt;
+        remInt = cfgFile->read_RemainingTime();
+        comboIndex = cfgFile->readDesiredIcon();
 
         qDebug("remInt from cfg.dat is: %d", remInt);
 
@@ -130,7 +135,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->doubleSpinBox_Minutes->setValue(bufMinutes);
         ui->doubleSpinBox_Seconds->setValue(bufSeconds);
 
-        configFile->close();
+//        configFile->close();
     }
 
     // center the MainWindow to screen
@@ -164,7 +169,8 @@ MainWindow::~MainWindow()
 {
     remInt = remInt - (timeNow.elapsed() / 1000 );
 
-    writeToCfgFile(comboIndex, remInt);
+//    writeToCfgFile(comboIndex, remInt);
+    cfgFile->write_RemainingTime(remInt);
 
     delete ui;
 }
@@ -182,7 +188,8 @@ void MainWindow::setIcon(int index)
     trayIcon->setToolTip(ui->comboBox->itemText(index));
 
     // write to cfg.dat the new index
-    writeToCfgFile(index, remInt);
+//    writeToCfgFile(index, remInt);
+    cfgFile->write_DesiredIcon(comboIndex);
 }
 
 void MainWindow::count()
@@ -276,18 +283,18 @@ void MainWindow::timeToGoHome()
     msgBox.exec();
 }
 
-void MainWindow::writeToCfgFile(quint32 iconIndex, qint32 remainingTime)
-{
-    configFile->open(QIODevice::WriteOnly);
-    QDataStream out(configFile);
+//void MainWindow::writeToCfgFile(quint32 iconIndex, qint32 remainingTime)
+//{
+//    configFile->open(QIODevice::WriteOnly);
+//    QDataStream out(configFile);
 
-    out<< (quint32) HEADER_FILE;
-    out<< (quint32) iconIndex;
-    out<< (qint32) remainingTime;
+//    out<< (quint32) HEADER_FILE;
+//    out<< (quint32) iconIndex;
+//    out<< (qint32) remainingTime;
 
-    configFile->flush();
-    configFile->close();
-}
+//    configFile->flush();
+//    configFile->close();
+//}
 
 int MainWindow::getTimeToCount(int hrs)
 {
@@ -338,7 +345,8 @@ void MainWindow::on_pushButtonStart_clicked()
 
         updateRemInt();
 
-        writeToCfgFile( comboIndex, remInt );
+//        writeToCfgFile( comboIndex, remInt );
+        cfgFile->write_RemainingTime(remInt);
 
         // disable counter start button and time edit
         ui->doubleSpinBox_Hours->setEnabled(false);

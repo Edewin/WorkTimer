@@ -14,6 +14,7 @@
 #include <QTimer>
 #include <QTime>
 
+#include "binaryfileconfig.h"
 #include "gohome.h"
 
 #define FIRST_ELEMENT 0
@@ -62,7 +63,7 @@ private:
 
     void timeToGoHome();
 
-    void writeToCfgFile(quint32 iconIndex, qint32 remainingTime);
+//    void writeToCfgFile(quint32 iconIndex, qint32 remainingTime);
 
     // GIFs
     QStringList gifsList;
@@ -84,7 +85,8 @@ private:
 
     quint32 comboIndex;
 
-    QFile *configFile;
+//    QFile *configFile;
+    BinaryFileConfig *cfgFile;
 
     QAction *minimizeAction;
     QAction *maximizeAction;
