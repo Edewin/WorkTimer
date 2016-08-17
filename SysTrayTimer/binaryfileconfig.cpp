@@ -10,44 +10,58 @@ BinaryFileConfig::~BinaryFileConfig()
     delete mFile;
 }
 
-void BinaryFileConfig::write_TimeToCount(qint32 timeToCount)
+void BinaryFileConfig::write_TimeToCount(const qint32 timeToCount)
 {
     this->timeToCount = timeToCount;
 
     updateAllVariables();
 }
 
-void BinaryFileConfig::write_RemainingTime(qint32 remTime)
+void BinaryFileConfig::write_RemainingTime(const qint32 remTime)
 {
     this->remainingTime = remTime;
 
     updateAllVariables();
 }
 
-void BinaryFileConfig::write_DesiredLanguage(quint32 language)
+void BinaryFileConfig::write_DesiredLanguage(const quint32 language)
 {
     this->desiredLanguage = language;
 
     updateAllVariables();
 }
 
-void BinaryFileConfig::write_ShortBreaks(bool shortBreak)
+void BinaryFileConfig::write_ShortBreaks(const bool shortBreak)
 {
     this->shortBreakActive = shortBreak;
 
     updateAllVariables();
 }
 
-void BinaryFileConfig::write_LaunchBreak(bool launchBreak)
+void BinaryFileConfig::write_LaunchBreak(const bool launchBreak)
 {
     this->launchBreakActive = launchBreak;
 
     updateAllVariables();
 }
 
-void BinaryFileConfig::write_DesiredIcon(quint32 comboIconIndex)
+void BinaryFileConfig::write_DesiredIcon(const quint32 comboIconIndex)
 {
     this->desiredIcon = comboIconIndex;
+
+    updateAllVariables();
+}
+
+void BinaryFileConfig::write_DesiredGIF(const quint32 comboGifIndex)
+{
+    this->desiredGif = comboGifIndex;
+
+    updateAllVariables();
+}
+
+void BinaryFileConfig::write_CurrentDate(const QString currentDate)
+{
+    this->dateString = currentDate;
 
     updateAllVariables();
 }
@@ -108,6 +122,13 @@ quint32 BinaryFileConfig::readDesiredGif()
     return this->desiredGif;
 }
 
+QString BinaryFileConfig::readCurrentDate()
+{
+    readAllVariables();
+
+    return this->dateString;
+}
+
 void BinaryFileConfig::openFileForRead()
 {
     if(!mFile->open(QIODevice::ReadOnly))
@@ -151,6 +172,7 @@ void BinaryFileConfig::updateAllVariables()
     out << (quint32) this->desiredGif;
     out << (bool) this->shortBreakActive;
     out << (bool) this->launchBreakActive;
+    out << (QString) this->dateString;
 
     mFile->flush();
     mFile->close();
@@ -169,6 +191,7 @@ void BinaryFileConfig::readAllVariables()
     in >> this->desiredGif;
     in >> this->shortBreakActive;
     in >> this->launchBreakActive;
+    in >> this->dateString;
 
     mFile->close();
 }

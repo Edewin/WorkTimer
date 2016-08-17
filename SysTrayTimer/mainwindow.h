@@ -10,6 +10,7 @@
 #include <QStringList>
 
 #include <QDateTime>
+#include <QDate>
 #include <QMessageBox>
 #include <QTimer>
 #include <QTime>
@@ -63,8 +64,6 @@ private:
 
     void timeToGoHome();
 
-//    void writeToCfgFile(quint32 iconIndex, qint32 remainingTime);
-
     // GIFs
     QStringList gifsList;
 
@@ -85,7 +84,7 @@ private:
 
     quint32 comboIndex;
 
-//    QFile *configFile;
+    // new cfgFile from class
     BinaryFileConfig *cfgFile;
 
     QAction *minimizeAction;
@@ -106,6 +105,7 @@ private:
     QTime timeToCount;
     QTimer *counter;
     QDateTime *systemTimeDate;
+    QDate *systemDate;
 };
 
 #endif // MAINWINDOW_H

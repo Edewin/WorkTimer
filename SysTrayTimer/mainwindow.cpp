@@ -7,6 +7,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // start App with first tab index
+    ui->tabWidget->setCurrentIndex(FIRST_ELEMENT);
+
     qApp->setQuitLockEnabled(false); // another way to fix the bug(1) with
                                     //program crash when mainwindow is hidden
 
@@ -30,6 +33,11 @@ MainWindow::MainWindow(QWidget *parent) :
     systemTimeDate = new QDateTime();
     QString currentTime = systemTimeDate->currentDateTime().toString() ;
     qDebug() << currentTime;
+
+    systemDate = new QDate();
+    QString currentDate = systemDate->currentDate().toString();
+    qDebug() << "current date is: " + currentDate;
+
 
     // counter Timer
     counter = new QTimer(this);
@@ -93,29 +101,39 @@ MainWindow::MainWindow(QWidget *parent) :
 
     if(headerFile != HEADER_FILE)
     {
-        qDebug() << "no data in cfg.dat";
+//        qDebug() << "no data in cfg.dat";
 
-        // write file header
         cfgFile->initVariables();
-//        inOut << (quint32) HEADER_FILE;
-//        inOut << (quint32) comboIndex;
-//        inOut << (qint32) remInt;
-
-//        configFile->flush();
-//        configFile->close();
     }
 
     else
     {
-        qDebug() << "read configurations from cfg.dat";
+//        qDebug() << "read configurations from cfg.dat";
 
         // read configuration
-//        inOut >> comboIndex;
-//        inOut >> remInt;
-        remInt = cfgFile->read_RemainingTime();
+
+        QString bufDate = cfgFile->readCurrentDate();
+
+        int bufx = QString::compare(bufDate, currentDate, Qt::CaseInsensitive);
+
+        if(bufx == 0) // if the current date is the same
+        {
+            remInt = cfgFile->read_RemainingTime();
+
+            qDebug() << "same day";
+        }
+        else
+        {
+            // it`s a new day a start over from timeToCount
+            remInt = cfgFile->read_TimeToCount();
+
+            cfgFile->write_CurrentDate(currentDate);
+
+            qDebug() << "new day";
+        }
         comboIndex = cfgFile->readDesiredIcon();
 
-        qDebug("remInt from cfg.dat is: %d", remInt);
+//        qDebug("remInt from cfg.dat is: %d", remInt);
 
         ui->comboBox->setCurrentIndex(comboIndex);
 
@@ -134,8 +152,6 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->doubleSpinBox_Hours->setValue(bufHours);
         ui->doubleSpinBox_Minutes->setValue(bufMinutes);
         ui->doubleSpinBox_Seconds->setValue(bufSeconds);
-
-//        configFile->close();
     }
 
     // center the MainWindow to screen
@@ -169,9 +185,9 @@ MainWindow::~MainWindow()
 {
     remInt = remInt - (timeNow.elapsed() / 1000 );
 
-//    writeToCfgFile(comboIndex, remInt);
     cfgFile->write_RemainingTime(remInt);
 
+    delete cfgFile;
     delete ui;
 }
 
@@ -188,7 +204,6 @@ void MainWindow::setIcon(int index)
     trayIcon->setToolTip(ui->comboBox->itemText(index));
 
     // write to cfg.dat the new index
-//    writeToCfgFile(index, remInt);
     cfgFile->write_DesiredIcon(comboIndex);
 }
 
@@ -283,19 +298,6 @@ void MainWindow::timeToGoHome()
     msgBox.exec();
 }
 
-//void MainWindow::writeToCfgFile(quint32 iconIndex, qint32 remainingTime)
-//{
-//    configFile->open(QIODevice::WriteOnly);
-//    QDataStream out(configFile);
-
-//    out<< (quint32) HEADER_FILE;
-//    out<< (quint32) iconIndex;
-//    out<< (qint32) remainingTime;
-
-//    configFile->flush();
-//    configFile->close();
-//}
-
 int MainWindow::getTimeToCount(int hrs)
 {
     timeToCount = timeNow.addSecs( hrs * 60 * 60 );
@@ -345,7 +347,8 @@ void MainWindow::on_pushButtonStart_clicked()
 
         updateRemInt();
 
-//        writeToCfgFile( comboIndex, remInt );
+        // write to cfg.dat the new timetoCount and update remInt
+        cfgFile->write_TimeToCount(remInt);
         cfgFile->write_RemainingTime(remInt);
 
         // disable counter start button and time edit
