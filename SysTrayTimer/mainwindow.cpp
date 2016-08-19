@@ -102,8 +102,6 @@ MainWindow::MainWindow(QWidget *parent) :
     if(headerFile != HEADER_FILE)
     {
 //        qDebug() << "no data in cfg.dat";
-
-        cfgFile->initVariables();
     }
 
     else
@@ -112,22 +110,29 @@ MainWindow::MainWindow(QWidget *parent) :
 
         // read configuration
 
+
+        ui->checkBox50MinBreak->setChecked(cfgFile->readShortBreak());
+
+        ui->comboBox_Languages->setCurrentIndex(cfgFile->readDesiredLanguage());
+        ui->comboBox_Gifs->setCurrentIndex(cfgFile->readDesiredGif());
+
+
         QString bufDate = cfgFile->readCurrentDate();
 
         int bufx = QString::compare(bufDate, currentDate, Qt::CaseInsensitive);
 
         if(bufx == 0) // if the current date is the same
         {
-            remInt = cfgFile->read_RemainingTime();
+            remInt = cfgFile->readRemainingTime();
 
             qDebug() << "same day";
         }
         else
         {
             // it`s a new day a start over from timeToCount
-            remInt = cfgFile->read_TimeToCount();
+            remInt = cfgFile->readTimeToCount();
 
-            cfgFile->write_CurrentDate(currentDate);
+            cfgFile->writeCurrentDate(currentDate);
 
             qDebug() << "new day";
         }
@@ -185,7 +190,7 @@ MainWindow::~MainWindow()
 {
     remInt = remInt - (timeNow.elapsed() / 1000 );
 
-    cfgFile->write_RemainingTime(remInt);
+    cfgFile->writeRemainingTime(remInt);
 
     delete cfgFile;
     delete ui;
@@ -204,12 +209,12 @@ void MainWindow::setIcon(int index)
     trayIcon->setToolTip(ui->comboBox->itemText(index));
 
     // write to cfg.dat the new index
-    cfgFile->write_DesiredIcon(comboIndex);
+    cfgFile->writeDesiredIcon(comboIndex);
 }
 
 void MainWindow::count()
 {
-    //qDebug()<< "time Elapsed is: " + QString::number( timeNow.elapsed() / 1000 );
+//    qDebug()<< "time Elapsed is: " + QString::number( timeNow.elapsed() / 1000 );
 
     int ElapsedTime = timeNow.elapsed() / 1000;
 
@@ -238,10 +243,10 @@ void MainWindow::count()
 
     if(ui->checkBox50MinBreak->isChecked())
     {
-        if(bufMinutes == 50)
+        if(ElapsedTime % (50 * 60) == 0)     // 50 * 60 -> 50 minutes
         {
             trayIcon->showMessage( tr("Short break!"),
-                                   tr("For your healthy, you should take a short break!"));
+                                       tr("For your healthy, you should take a short break!"));
         }
     }
 
@@ -348,8 +353,8 @@ void MainWindow::on_pushButtonStart_clicked()
         updateRemInt();
 
         // write to cfg.dat the new timetoCount and update remInt
-        cfgFile->write_TimeToCount(remInt);
-        cfgFile->write_RemainingTime(remInt);
+        cfgFile->writeTimeToCount(remInt);
+        cfgFile->writeRemainingTime(remInt);
 
         // disable counter start button and time edit
         ui->doubleSpinBox_Hours->setEnabled(false);
@@ -390,17 +395,6 @@ void MainWindow::on_doubleSpinBox_Seconds_valueChanged(double arg1)
     seconds = static_cast<int>(arg1);
 }
 
-void MainWindow::on_comboBox_Languages_currentIndexChanged(int index)
-{
-    // ToDo add language in future
-}
-
-void MainWindow::on_comboBox_Gifs_currentIndexChanged(int index)
-{
-//    qDebug("index from gifs changed");
-
-}
-
 void MainWindow::on_gifTestButton_clicked()
 {
     goHome *homeUI = new goHome(this);
@@ -415,4 +409,24 @@ void MainWindow::on_gifTestButton_clicked()
     }
 
     delete homeUI;
+}
+
+void MainWindow::on_checkBox50MinBreak_clicked(bool checked)
+{
+    cfgFile->writeShortBreaks(checked);
+    qDebug() << checked;
+}
+
+void MainWindow::on_comboBox_Languages_activated(int index)
+{
+    qDebug("activated index comboBox Languages is %d", index);
+
+    cfgFile->writeDesiredLanguage(index);
+}
+
+void MainWindow::on_comboBox_Gifs_activated(int index)
+{
+    qDebug("index comboBox GIFs is %d", index);
+
+    cfgFile->writeDesiredGIF(index);
 }

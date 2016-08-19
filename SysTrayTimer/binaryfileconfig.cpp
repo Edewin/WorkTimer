@@ -3,6 +3,8 @@
 BinaryFileConfig::BinaryFileConfig(const QString filename)
 {
     mFile = new QFile(filename);
+
+    initVariables();
 }
 
 BinaryFileConfig::~BinaryFileConfig()
@@ -10,56 +12,56 @@ BinaryFileConfig::~BinaryFileConfig()
     delete mFile;
 }
 
-void BinaryFileConfig::write_TimeToCount(const qint32 timeToCount)
+void BinaryFileConfig::writeTimeToCount(qint32 timeToCount)
 {
     this->timeToCount = timeToCount;
 
     updateAllVariables();
 }
 
-void BinaryFileConfig::write_RemainingTime(const qint32 remTime)
+void BinaryFileConfig::writeRemainingTime(qint32 remTime)
 {
     this->remainingTime = remTime;
 
     updateAllVariables();
 }
 
-void BinaryFileConfig::write_DesiredLanguage(const quint32 language)
+void BinaryFileConfig::writeDesiredLanguage(quint32 language)
 {
     this->desiredLanguage = language;
 
     updateAllVariables();
 }
 
-void BinaryFileConfig::write_ShortBreaks(const bool shortBreak)
+void BinaryFileConfig::writeShortBreaks(bool shortBreak)
 {
     this->shortBreakActive = shortBreak;
 
     updateAllVariables();
 }
 
-void BinaryFileConfig::write_LaunchBreak(const bool launchBreak)
+void BinaryFileConfig::writeLaunchBreak(bool launchBreak)
 {
     this->launchBreakActive = launchBreak;
 
     updateAllVariables();
 }
 
-void BinaryFileConfig::write_DesiredIcon(const quint32 comboIconIndex)
+void BinaryFileConfig::writeDesiredIcon(quint32 comboIconIndex)
 {
     this->desiredIcon = comboIconIndex;
 
     updateAllVariables();
 }
 
-void BinaryFileConfig::write_DesiredGIF(const quint32 comboGifIndex)
+void BinaryFileConfig::writeDesiredGIF(quint32 comboGifIndex)
 {
     this->desiredGif = comboGifIndex;
 
     updateAllVariables();
 }
 
-void BinaryFileConfig::write_CurrentDate(const QString currentDate)
+void BinaryFileConfig::writeCurrentDate(QString currentDate)
 {
     this->dateString = currentDate;
 
@@ -73,21 +75,21 @@ quint32 BinaryFileConfig::readHeaderFile()
     return this->HEADER_FILE;
 }
 
-qint32 BinaryFileConfig::read_TimeToCount()
+qint32 BinaryFileConfig::readTimeToCount()
 {
     readAllVariables();
 
     return this->timeToCount;
 }
 
-qint32 BinaryFileConfig::read_RemainingTime()
+qint32 BinaryFileConfig::readRemainingTime()
 {
     readAllVariables();
 
     return this->remainingTime;
 }
 
-quint32 BinaryFileConfig::read_DesiredLanguage()
+quint32 BinaryFileConfig::readDesiredLanguage()
 {
     readAllVariables();
 
@@ -148,6 +150,7 @@ void BinaryFileConfig::openFileForWrite()
 void BinaryFileConfig::initVariables()
 {
     this->HEADER_FILE = 0xE0D0A016;
+
     this->desiredGif = 0;
     this->desiredIcon = 0;
     this->desiredLanguage = 0;

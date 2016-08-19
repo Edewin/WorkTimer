@@ -9,25 +9,24 @@
 class BinaryFileConfig
 {
 public:
-    explicit BinaryFileConfig(const QString filename);
+    BinaryFileConfig(const QString filename);
     ~BinaryFileConfig();
 
     // write to cfg. file
-    void write_TimeToCount(const qint32 timeToCount);
-    void write_RemainingTime(const qint32 remTime);
-    void write_DesiredLanguage(const quint32 language);
-    void write_ShortBreaks(const bool shortBreak=true);
-    void write_LaunchBreak(const bool launchBreak=true);
-    void write_DesiredIcon(const quint32 comboIconIndex);
-    void write_DesiredGIF(const quint32 comboGifIndex);
-    void write_CurrentDate(const QString currentDate);
+    void writeTimeToCount(qint32 timeToCount);
+    void writeRemainingTime(qint32 remTime);
+    void writeDesiredLanguage(quint32 language);
+    void writeShortBreaks(bool shortBreak=true);
+    void writeLaunchBreak(bool launchBreak=true);
+    void writeDesiredIcon(quint32 comboIconIndex);
+    void writeDesiredGIF(quint32 comboGifIndex);
+    void writeCurrentDate(QString currentDate);
 
-    void initVariables();
 
     quint32 readHeaderFile();
-    qint32 read_TimeToCount();
-    qint32 read_RemainingTime();
-    quint32 read_DesiredLanguage();
+    qint32 readTimeToCount();
+    qint32 readRemainingTime();
+    quint32 readDesiredLanguage();
     bool readShortBreak();
     bool readLaunchBreak();
     quint32 readDesiredIcon();
@@ -35,6 +34,8 @@ public:
     QString readCurrentDate();
 
 private:
+    void initVariables();
+
     void openFileForRead();
     void openFileForWrite();
 

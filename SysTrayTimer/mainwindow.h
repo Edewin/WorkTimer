@@ -50,11 +50,13 @@ private slots:
 
     void on_doubleSpinBox_Seconds_valueChanged(double arg1);
 
-    void on_comboBox_Languages_currentIndexChanged(int index);
-
-    void on_comboBox_Gifs_currentIndexChanged(int index);
-
     void on_gifTestButton_clicked();
+
+    void on_checkBox50MinBreak_clicked(bool checked);
+
+    void on_comboBox_Languages_activated(int index);
+
+    void on_comboBox_Gifs_activated(int index);
 
 private:
     Ui::MainWindow *ui;
