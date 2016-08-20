@@ -15,11 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     gohome.cpp \
-    binaryfileconfig.cpp
+    binaryfileconfig.cpp \
+    filemanipulator.cpp
 
 HEADERS  += mainwindow.h \
     gohome.h \
-    binaryfileconfig.h
+    binaryfileconfig.h \
+    filemanipulator.h
 
 FORMS    += mainwindow.ui \
     gohome.ui

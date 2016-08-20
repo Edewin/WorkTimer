@@ -13,7 +13,7 @@ FileManipulator::~FileManipulator()
 
 
 
-void FileManipulator::WriteToFile(const QString dataToWrite)
+void FileManipulator::WriteToFile(const QString &dataToWrite)
 {
 
     QTextStream writeStreamer(mFile);
@@ -26,7 +26,7 @@ void FileManipulator::WriteToFile(const QString dataToWrite)
     mFile->close();
 }
 
-void FileManipulator::Append(const QString dataToWrite)
+void FileManipulator::Append(const QString &dataToWrite)
 {
     QTextStream appendStreamer(mFile);
 
@@ -42,11 +42,45 @@ QString FileManipulator::ReadFromFile()
 {
     QTextStream readStreamer(mFile);
 
-    QString RxData = "";
+    QString RxData;
 
-    OpenFileForRead();
+    OpenFileForReadWrite();
+//    OpenFileForRead();
+   // OpenFileForAppend();
 
-    RxData = readStreamer.readAll();
+    qDebug() << mFile->size();
+
+    while( !readStreamer.atEnd())
+    {
+        RxData = readStreamer.readLine();
+
+        //processLine(RxData, readStreamer);
+
+        QStringList bufList = RxData.split(",");
+        int comp = QString::compare(bufList.at(0) ,sysDate.currentDate().toString(), Qt::CaseInsensitive );
+
+        if(comp == 0) // are the same
+        {
+            qDebug() << "dates are the same " + RxData;
+
+            int lastLineInt = RxData.size();
+            qDebug("RxData is: %d",lastLineInt);
+
+            lastLineInt = mFile->size() - lastLineInt;
+
+            mFile->seek( lastLineInt - 2);
+
+            qDebug("lastLineInt is: %d",lastLineInt);
+
+            // keep first 2 elements from lastLine and then update the line
+            readStreamer << bufList.at(0) + "," + bufList.at(1) + ",dates are the same,\n";
+            break;
+
+        }
+        else
+            qDebug() << "different date";
+
+    }
 
     mFile->close();
 
@@ -87,5 +121,9 @@ void FileManipulator::OpenFileForReadWrite()
         qDebug() << "Couldn`t open the file";   // replace with messagebox
         return;
     }
+}
+
+void FileManipulator::processLine(const QString &theLine, const QTextStream &stream)
+{
 }
 

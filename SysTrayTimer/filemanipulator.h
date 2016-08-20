@@ -7,6 +7,7 @@
 #include <QDir>
 #include <QTextStream>
 #include <QDebug>
+#include <QDate>
 
 
 class FileManipulator
@@ -16,8 +17,8 @@ public:
 
     ~FileManipulator();
 
-    void WriteToFile(const QString dataToWrite);
-    void Append(const QString dataToWrite);
+    void WriteToFile(const QString &dataToWrite);
+    void Append(const QString &dataToWrite);
     QString ReadFromFile();
 
 protected:
@@ -26,8 +27,12 @@ protected:
     void OpenFileForAppend();
     void OpenFileForReadWrite();
 
+    void processLine(const QString &theLine, const QTextStream &stream);
+
 private:
     QFile *mFile;
+
+    QDate sysDate;
 
 signals:
 

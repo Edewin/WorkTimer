@@ -14,10 +14,9 @@ MainWindow::MainWindow(QWidget *parent) :
                                     //program crash when mainwindow is hidden
 
     // FramelessWindowHint
-    setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::CustomizeWindowHint);
+    //setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::CustomizeWindowHint);
 
     // get current time and time to count
-
     hours = ui->doubleSpinBox_Hours->value();
     minutes = ui->doubleSpinBox_Minutes->value();
     seconds = ui->doubleSpinBox_Seconds->value();
@@ -31,8 +30,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     systemTimeDate = new QDateTime();
-    QString currentTime = systemTimeDate->currentDateTime().toString() ;
-    qDebug() << currentTime;
+    QString currentDateTime = systemTimeDate->currentDateTime().toString() ;
+    qDebug() << currentDateTime;
 
     systemDate = new QDate();
     QString currentDate = systemDate->currentDate().toString();
@@ -48,55 +47,23 @@ MainWindow::MainWindow(QWidget *parent) :
 
     comboIndex = FIRST_ELEMENT;
 
-    // add icons to comboboxes
-
-    // Language Tab
-    ui->comboBox_Languages->addItem(QIcon(":/imgs/flags/United-Kingdom.png"), tr("English"));
-    ui->comboBox_Languages->addItem(QIcon(":/imgs/flags/Romania.png"), tr("Română"));
-    ui->comboBox_Languages->addItem(QIcon(":/imgs/flags/Germany.png"), tr("Deutsch"));
-    ui->comboBox_Languages->addItem(QIcon(":/imgs/flags/France.png"), tr("Francais"));
-
-    // Personalize Tab
-
-    // Add icons
-    ui->comboBox->addItem(QIcon(":/imgs/paperTimer.png"),tr("Pencil"));
-    ui->comboBox->addItem(QIcon(":/imgs/hourglass.png"),tr("Glass"));
-    ui->comboBox->addItem(QIcon(":/imgs/Clock-icon.png"),tr("3D"));
-    ui->comboBox->addItem(QIcon(":/imgs/TiMER-icon.png"),tr("Girl"));
-    ui->comboBox->addItem(QIcon(":/imgs/Clock02.png"),tr("B&W"));
-
-    // Add GIFs
-
-    gifsList << ":/imgs/gifs/clear.gif" << ":/imgs/gifs/cry.gif"
-             << ":/imgs/gifs/Foam-Heart.gif" << ":/imgs/gifs/friendfsgif"
-             << ":/imgs/gifs/giphy.gif" <<  ":/imgs/gifs/giphyElectric.gif"
-             << ":/imgs/gifs/go.gif" << ":/imgs/gifs/gohme.gif"
-             << ":/imgs/gifs/Golf-Ball.gif" << ":/imgs/gifs/sleepy.gif"
-             << ":/imgs/gifs/tumblr_inline.gif" << ":/imgs/gifs/wGDqq.gif";
-
-    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/clear.gif"), tr("clear"));
-    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/cry.gif"), tr("cry"));
-    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/Foam-Heart.gif"), tr("heart coffee"));
-    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/friendfsgif"), tr("friends fan"));
-    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/giphy.gif"), tr("giphy"));
-    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/giphyElectric.gif"), tr("electric"));
-    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/go.gif"), tr("just go"));
-    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/gohme.gif"), tr("go home"));
-    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/Golf-Ball.gif"), tr("golf"));
-    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/sleepy.gif"), tr("sleepy"));
-    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/tumblr_inline.gif"), tr("woman"));
-    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/wGDqq.gif"), tr("work done"));
+    addItemsToComboBoxes();
 
     // configuration file
-//    configFile = new QFile("cfg.dat");
     cfgFile = new BinaryFileConfig("cfg.dat");
 
-//    configFile->open(QIODevice::ReadWrite);
-//    QDataStream inOut(configFile);
+    // csvFile
+    QString filePathString = QDir::currentPath() + "/log.csv";
+    csvFile = new FileManipulator(filePathString);
 
-//    // check if file containts data
+    qDebug() << csvFile->ReadFromFile();
+
+    // write current date and time to log.csv
+ //   csvFile->Append(currentDate + ",\n");
+
+
+   // check if file containts data
     quint32 headerFile = 0;
-
     headerFile = cfgFile->readHeaderFile();
 
     if(headerFile != HEADER_FILE)
@@ -129,7 +96,7 @@ MainWindow::MainWindow(QWidget *parent) :
         }
         else
         {
-            // it`s a new day a start over from timeToCount
+            // it`s a new day -> start over from timeToCount
             remInt = cfgFile->readTimeToCount();
 
             cfgFile->writeCurrentDate(currentDate);
@@ -188,10 +155,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    qDebug() << "destructor was called";
     remInt = remInt - (timeNow.elapsed() / 1000 );
+
+    // write current date and time to log.csv
+    csvFile->Append(systemDate->currentDate().toString() + ",\n");
 
     cfgFile->writeRemainingTime(remInt);
 
+    delete csvFile;
     delete cfgFile;
     delete ui;
 }
@@ -243,7 +215,7 @@ void MainWindow::count()
 
     if(ui->checkBox50MinBreak->isChecked())
     {
-        if(ElapsedTime % (50 * 60) == 0)     // 50 * 60 -> 50 minutes
+        if(ElapsedTime != 0 && ElapsedTime % (50 * 60) == 0)     // 50 * 60 -> 50 minutes
         {
             trayIcon->showMessage( tr("Short break!"),
                                        tr("For your healthy, you should take a short break!"));
@@ -294,13 +266,60 @@ void MainWindow::createTrayIcon()
 
 void MainWindow::timeToGoHome()
 {
-    QMessageBox msgBox;
-    QSize size;
-    size.setHeight(200);
-    size.setWidth(200);
-    msgBox.setIconPixmap(trayIcon->icon().pixmap(size));
-    msgBox.setText( tr("Time to go home!"));
-    msgBox.exec();
+    goHome *homeUI = new goHome(this);
+
+    homeUI->gif = new QMovie(gifsList.at(ui->comboBox_Gifs->currentIndex()));
+    homeUI->gifContainer->setMovie(homeUI->gif);
+    homeUI->gif->start();
+    homeUI->setOrientation(Qt::Vertical);
+
+    if(homeUI->exec())
+    {
+    }
+
+    delete homeUI;
+}
+
+void MainWindow::addItemsToComboBoxes()
+{
+    // add icons to comboboxes
+
+    // Language Tab
+    ui->comboBox_Languages->addItem(QIcon(":/imgs/flags/United-Kingdom.png"), tr("English"));
+    ui->comboBox_Languages->addItem(QIcon(":/imgs/flags/Romania.png"), tr("Română"));
+    ui->comboBox_Languages->addItem(QIcon(":/imgs/flags/Germany.png"), tr("Deutsch"));
+    ui->comboBox_Languages->addItem(QIcon(":/imgs/flags/France.png"), tr("Francais"));
+
+    // Personalize Tab
+
+    // Add icons
+    ui->comboBox->addItem(QIcon(":/imgs/paperTimer.png"),tr("Pencil"));
+    ui->comboBox->addItem(QIcon(":/imgs/hourglass.png"),tr("Glass"));
+    ui->comboBox->addItem(QIcon(":/imgs/Clock-icon.png"),tr("3D"));
+    ui->comboBox->addItem(QIcon(":/imgs/TiMER-icon.png"),tr("Girl"));
+    ui->comboBox->addItem(QIcon(":/imgs/Clock02.png"),tr("B&W"));
+
+    // Add GIFs
+
+    gifsList << ":/imgs/gifs/clear.gif" << ":/imgs/gifs/cry.gif"
+             << ":/imgs/gifs/Foam-Heart.gif" << ":/imgs/gifs/friendfsgif"
+             << ":/imgs/gifs/giphy.gif" <<  ":/imgs/gifs/giphyElectric.gif"
+             << ":/imgs/gifs/go.gif" << ":/imgs/gifs/gohme.gif"
+             << ":/imgs/gifs/Golf-Ball.gif" << ":/imgs/gifs/sleepy.gif"
+             << ":/imgs/gifs/tumblr_inline.gif" << ":/imgs/gifs/wGDqq.gif";
+
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/clear.gif"), tr("clear"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/cry.gif"), tr("cry"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/Foam-Heart.gif"), tr("heart coffee"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/friendfsgif"), tr("friends fan"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/giphy.gif"), tr("giphy"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/giphyElectric.gif"), tr("electric"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/go.gif"), tr("just go"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/gohme.gif"), tr("go home"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/Golf-Ball.gif"), tr("golf"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/sleepy.gif"), tr("sleepy"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/tumblr_inline.gif"), tr("woman"));
+    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/wGDqq.gif"), tr("work done"));
 }
 
 int MainWindow::getTimeToCount(int hrs)
@@ -429,4 +448,21 @@ void MainWindow::on_comboBox_Gifs_activated(int index)
     qDebug("index comboBox GIFs is %d", index);
 
     cfgFile->writeDesiredGIF(index);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    remInt = remInt - (timeNow.elapsed() / 1000 );
+
+    qDebug() << "close event was called";
+
+    // write current date and time to log.csv
+    csvFile->Append(systemDate->currentDate().toString() + ",\n");
+
+    cfgFile->writeRemainingTime(remInt);
+
+    delete csvFile;
+    delete cfgFile;
+    delete ui;
+    event->accept();
 }

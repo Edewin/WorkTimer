@@ -15,8 +15,11 @@
 #include <QTimer>
 #include <QTime>
 
+#include <QCloseEvent>
+
 #include "binaryfileconfig.h"
 #include "gohome.h"
+#include "filemanipulator.h"
 
 #define FIRST_ELEMENT 0
 
@@ -58,6 +61,8 @@ private slots:
 
     void on_comboBox_Gifs_activated(int index);
 
+protected:
+     void closeEvent(QCloseEvent *event);
 private:
     Ui::MainWindow *ui;
 
@@ -65,6 +70,8 @@ private:
     void createTrayIcon();
 
     void timeToGoHome();
+
+    void addItemsToComboBoxes();
 
     // GIFs
     QStringList gifsList;
@@ -88,6 +95,9 @@ private:
 
     // new cfgFile from class
     BinaryFileConfig *cfgFile;
+
+    // csv File for logging
+    FileManipulator *csvFile;
 
     QAction *minimizeAction;
     QAction *maximizeAction;
