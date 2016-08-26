@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     seconds = ui->doubleSpinBox_Seconds->value();
 
     timeNow = timeNow.currentTime();
+    QString startingTime = timeNow.currentTime().toString();
     timeNow.start();
 
     updateRemInt();
@@ -56,10 +57,10 @@ MainWindow::MainWindow(QWidget *parent) :
     QString filePathString = QDir::currentPath() + "/log.csv";
     csvFile = new FileManipulator(filePathString);
 
-    qDebug() << csvFile->ReadFromFile();
+   // qDebug() << csvFile->ReadFromFile();
 
     // write current date and time to log.csv
- //   csvFile->Append(currentDate + ",\n");
+    csvFile->Append(currentDate + "," + startingTime + ",");
 
 
    // check if file containts data
@@ -158,8 +159,11 @@ MainWindow::~MainWindow()
     qDebug() << "destructor was called";
     remInt = remInt - (timeNow.elapsed() / 1000 );
 
-    // write current date and time to log.csv
-    csvFile->Append(systemDate->currentDate().toString() + ",\n");
+    QString endTime = timeNow.currentTime().toString();
+    int elapsedTime = timeNow.elapsed() / 1000; // seconds
+
+    // write current date and elapsed time to log.csv
+    csvFile->Append(endTime + "," + QString::number(elapsedTime) + ",\n");
 
     cfgFile->writeRemainingTime(remInt);
 
@@ -168,6 +172,25 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    remInt = remInt - (timeNow.elapsed() / 1000 );
+
+    qDebug() << "close event was called";
+
+    QString endTime = timeNow.currentTime().toString();
+    int elapsedTime = timeNow.elapsed() / 1000; // seconds
+
+    // write current date and elapsed time to log.csv
+    csvFile->Append(endTime + "," + QString::number(elapsedTime) + ",\n");
+
+    cfgFile->writeRemainingTime(remInt);
+
+    delete csvFile;
+    delete cfgFile;
+    delete ui;
+    event->accept();
+}
 
 void MainWindow::setIcon(int index)
 {
@@ -448,21 +471,4 @@ void MainWindow::on_comboBox_Gifs_activated(int index)
     qDebug("index comboBox GIFs is %d", index);
 
     cfgFile->writeDesiredGIF(index);
-}
-
-void MainWindow::closeEvent(QCloseEvent *event)
-{
-    remInt = remInt - (timeNow.elapsed() / 1000 );
-
-    qDebug() << "close event was called";
-
-    // write current date and time to log.csv
-    csvFile->Append(systemDate->currentDate().toString() + ",\n");
-
-    cfgFile->writeRemainingTime(remInt);
-
-    delete csvFile;
-    delete cfgFile;
-    delete ui;
-    event->accept();
 }
