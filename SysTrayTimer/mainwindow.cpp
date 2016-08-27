@@ -174,22 +174,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    remInt = remInt - (timeNow.elapsed() / 1000 );
-
     qDebug() << "close event was called";
 
-    QString endTime = timeNow.currentTime().toString();
-    int elapsedTime = timeNow.elapsed() / 1000; // seconds
-
-    // write current date and elapsed time to log.csv
-    csvFile->Append(endTime + "," + QString::number(elapsedTime) + ",\n");
-
-    cfgFile->writeRemainingTime(remInt);
-
-    delete csvFile;
-    delete cfgFile;
-    delete ui;
-    event->accept();
+    QApplication::quit();
 }
 
 void MainWindow::setIcon(int index)
