@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>247</height>
+    <height>225</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -390,7 +390,6 @@
    </attribute>
    <addaction name="actionHide"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionHide">
    <property name="icon">
     <iconset resource="imgs.qrc">

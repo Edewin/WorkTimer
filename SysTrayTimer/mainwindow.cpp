@@ -45,23 +45,26 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(counter, SIGNAL(timeout()), this, SLOT(count()) );
     counter->start();
 
-
     comboIndex = FIRST_ELEMENT;
 
     addItemsToComboBoxes();
 
     // configuration file
-    cfgFile = new BinaryFileConfig("cfg.dat");
+    QString cfgFilePath = QDir::currentPath() + "/cfg.dat";
+
+    qDebug() << cfgFilePath;
+    cfgFile = new BinaryFileConfig(cfgFilePath);
 
     // csvFile
     QString filePathString = QDir::currentPath() + "/log.csv";
     csvFile = new FileManipulator(filePathString);
 
    // check if file containts data
-    quint32 headerFile = 0;
-    headerFile = cfgFile->readHeaderFile();
+    qint64 fileSize = 0;
+    fileSize = cfgFile->getFileSize();
+    qDebug() << fileSize;
 
-    if(headerFile != HEADER_FILE)
+    if(fileSize == 0)
     {
         qDebug() << "no data in cfg.dat";
 

@@ -9,7 +9,7 @@
 class BinaryFileConfig
 {
 public:
-    BinaryFileConfig(const QString filename);
+    explicit BinaryFileConfig(const QString &filename);
     ~BinaryFileConfig();
 
     // write to cfg. file
@@ -22,7 +22,7 @@ public:
     void writeDesiredGIF(quint32 comboGifIndex);
     void writeCurrentDate(QString currentDate);
 
-
+    qint64 getFileSize();
     quint32 readHeaderFile();
     qint32 readTimeToCount();
     qint32 readRemainingTime();

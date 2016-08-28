@@ -1,6 +1,6 @@
 #include "binaryfileconfig.h"
 
-BinaryFileConfig::BinaryFileConfig(const QString filename)
+BinaryFileConfig::BinaryFileConfig(const QString &filename)
 {
     mFile = new QFile(filename);
 
@@ -66,6 +66,11 @@ void BinaryFileConfig::writeCurrentDate(QString currentDate)
     this->dateString = currentDate;
 
     updateAllVariables();
+}
+
+qint64 BinaryFileConfig::getFileSize()
+{
+    return mFile->size();
 }
 
 quint32 BinaryFileConfig::readHeaderFile()
@@ -136,6 +141,7 @@ void BinaryFileConfig::openFileForRead()
     if(!mFile->open(QIODevice::ReadOnly))
     {
         // something went wrong here
+        qDebug() << "couldn`t open the file for read";
     }
 }
 
@@ -144,6 +150,7 @@ void BinaryFileConfig::openFileForWrite()
     if(!mFile->open(QIODevice::WriteOnly))
     {
         // something went wrong here
+        qDebug() << "couldn`t open the file for write";
     }
 }
 
