@@ -57,27 +57,23 @@ MainWindow::MainWindow(QWidget *parent) :
     QString filePathString = QDir::currentPath() + "/log.csv";
     csvFile = new FileManipulator(filePathString);
 
-   // qDebug() << csvFile->ReadFromFile();
-
-    // write current date and time to log.csv
-    csvFile->Append(currentDate + "," + startingTime + ",");
-
-
    // check if file containts data
     quint32 headerFile = 0;
     headerFile = cfgFile->readHeaderFile();
 
     if(headerFile != HEADER_FILE)
     {
-//        qDebug() << "no data in cfg.dat";
+        qDebug() << "no data in cfg.dat";
+
+        // write current date and time to log.csv
+        csvFile->Append(currentDate + "," + startingTime + ",");
     }
 
     else
     {
-//        qDebug() << "read configurations from cfg.dat";
+        qDebug() << "read configurations from cfg.dat";
 
         // read configuration
-
 
         ui->checkBox50MinBreak->setChecked(cfgFile->readShortBreak());
 
@@ -91,18 +87,24 @@ MainWindow::MainWindow(QWidget *parent) :
 
         if(bufx == 0) // if the current date is the same
         {
+            qDebug() << "same day";
+
             remInt = cfgFile->readRemainingTime();
 
-            qDebug() << "same day";
+            // replace last line but keep current date and starting time
+            csvFile->ReplaceLastLineButKeepFirst2Elements();
         }
         else
         {
+            qDebug() << "new day";
+
             // it`s a new day -> start over from timeToCount
             remInt = cfgFile->readTimeToCount();
 
             cfgFile->writeCurrentDate(currentDate);
 
-            qDebug() << "new day";
+            // write current date and time to log.csv
+            csvFile->Append(currentDate + "," + startingTime + ",");
         }
         comboIndex = cfgFile->readDesiredIcon();
 
@@ -175,6 +177,8 @@ MainWindow::~MainWindow()
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     qDebug() << "close event was called";
+
+    event->ignore();
 
     QApplication::quit();
 }

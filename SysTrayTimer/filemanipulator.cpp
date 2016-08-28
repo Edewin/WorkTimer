@@ -1,7 +1,7 @@
 #include "filemanipulator.h"
 
 
-FileManipulator::FileManipulator(const QString filename)
+FileManipulator::FileManipulator(const QString &filename)
 {
     mFile = new QFile(filename);
 }
@@ -11,11 +11,8 @@ FileManipulator::~FileManipulator()
     delete mFile;
 }
 
-
-
 void FileManipulator::WriteToFile(const QString &dataToWrite)
 {
-
     QTextStream writeStreamer(mFile);
 
     OpenFileForWrite();
@@ -44,47 +41,63 @@ QString FileManipulator::ReadFromFile()
 
     QString RxData;
 
-    OpenFileForReadWrite();
-//    OpenFileForRead();
-   // OpenFileForAppend();
+    OpenFileForRead();
 
-    qDebug() << mFile->size();
-
-    while( !readStreamer.atEnd())
+    if( mFile->size() > 10000 )
     {
-        RxData = readStreamer.readLine();
-
-        //processLine(RxData, readStreamer);
-
-        QStringList bufList = RxData.split(",");
-        int comp = QString::compare(bufList.at(0) ,sysDate.currentDate().toString(), Qt::CaseInsensitive );
-
-        if(comp == 0) // are the same
-        {
-            qDebug() << "dates are the same " + RxData;
-
-            int lastLineInt = RxData.size();
-            qDebug("RxData is: %d",lastLineInt);
-
-            lastLineInt = mFile->size() - lastLineInt;
-
-            mFile->seek( lastLineInt - 2);
-
-            qDebug("lastLineInt is: %d",lastLineInt);
-
-            // keep first 2 elements from lastLine and then update the line
-            readStreamer << bufList.at(0) + "," + bufList.at(1) + ",dates are the same,\n";
-            break;
-
-        }
-        else
-            qDebug() << "different date";
+        RxData = "file too big";
+    }
+    else
+    {
+        RxData = readStreamer.readAll();
 
     }
 
     mFile->close();
 
     return RxData;
+}
+
+void FileManipulator::ReplaceLastLineButKeepFirst2Elements()
+{
+    QTextStream readStreamer(mFile);
+
+    QString RxData;
+
+    OpenFileForReadWrite();
+
+    qDebug() << mFile->size();
+
+    // read Line by line all the Document and compare the dates
+    while( !readStreamer.atEnd())
+    {
+        RxData = readStreamer.readLine();
+
+        QStringList bufList = RxData.split(",");
+        int comp = QString::compare(bufList.at(0),
+                                    sysDate.currentDate().toString(),
+                                    Qt::CaseInsensitive);
+
+        if(comp == 0) // are the same
+        {
+            qDebug() << "dates are the same " + RxData;
+
+            int lastLineInt = RxData.size();
+
+            lastLineInt = mFile->size() - lastLineInt;
+
+            mFile->seek( lastLineInt - 1 );
+
+            // keep first 2 elements from lastLine and then update the line
+            readStreamer << bufList.at(0) + "," + bufList.at(1) + ",";
+
+            // delete all after -> bufList.at(1) + ","
+            mFile->resize(lastLineInt);
+            break;
+        }
+    }
+
+    mFile->close();
 }
 
 void FileManipulator::OpenFileForRead()
@@ -121,9 +134,5 @@ void FileManipulator::OpenFileForReadWrite()
         qDebug() << "Couldn`t open the file";   // replace with messagebox
         return;
     }
-}
-
-void FileManipulator::processLine(const QString &theLine, const QTextStream &stream)
-{
 }
 

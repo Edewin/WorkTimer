@@ -13,21 +13,20 @@
 class FileManipulator
 {
 public:
-    explicit FileManipulator(const QString filename);
+    explicit FileManipulator(const QString &filename);
 
     ~FileManipulator();
 
     void WriteToFile(const QString &dataToWrite);
     void Append(const QString &dataToWrite);
     QString ReadFromFile();
+    void ReplaceLastLineButKeepFirst2Elements();
 
 protected:
     void OpenFileForRead();
     void OpenFileForWrite();
     void OpenFileForAppend();
     void OpenFileForReadWrite();
-
-    void processLine(const QString &theLine, const QTextStream &stream);
 
 private:
     QFile *mFile;

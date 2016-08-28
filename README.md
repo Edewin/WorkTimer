@@ -5,7 +5,7 @@ WorkTimer
 - [ ] Write in file : 
 1. - [x] time to count
 2. - [x] desired icon
-3. - [ ] .csv file for log for work in first release
+3. - [X] .csv file for log for work in first release
 - [ ] Log for work
 1. - [ ] Another window for showing graphically working history
 2. - [ ] Total overtime
