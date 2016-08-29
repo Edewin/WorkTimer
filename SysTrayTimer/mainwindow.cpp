@@ -68,6 +68,9 @@ MainWindow::MainWindow(QWidget *parent) :
     {
         qDebug() << "no data in cfg.dat";
 
+        cfgFile->writeTimeToCount(remInt);
+        cfgFile->writeCurrentDate(currentDate);
+
         // write current date and time to log.csv
         csvFile->Append(currentDate + "," + startingTime + ",");
     }
