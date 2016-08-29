@@ -166,7 +166,7 @@ void BinaryFileConfig::initVariables()
     this->shortBreakActive = true;
 
     this->remainingTime = 0;
-    this->timeToCount = 0;
+    this->timeToCount = 31200;      // 8:40:00 (hh:MM:ss)
 }
 
 void BinaryFileConfig::updateAllVariables()
