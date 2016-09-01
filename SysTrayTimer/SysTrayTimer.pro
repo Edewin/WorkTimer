@@ -16,15 +16,18 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     gohome.cpp \
     binaryfileconfig.cpp \
-    filemanipulator.cpp
+    filemanipulator.cpp \
+    graphs_last_week.cpp
 
 HEADERS  += mainwindow.h \
     gohome.h \
     binaryfileconfig.h \
-    filemanipulator.h
+    filemanipulator.h \
+    graphs_last_week.h
 
 FORMS    += mainwindow.ui \
-    gohome.ui
+    gohome.ui \
+    graphs_last_week.ui
 
 RESOURCES += \
     imgs.qrc
