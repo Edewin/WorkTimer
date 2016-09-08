@@ -57,9 +57,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // csvFile
     QString filePathString = QDir::currentPath() + "/log.csv";
+    qDebug() << filePathString;
     csvFile = new FileManipulator(filePathString);
 
    // check if file containts data
+
+//    // write current date and time to log.csv
+//    csvFile->WriteToFile(currentDate + "," + startingTime + ",");
     qint64 fileSize = 0;
     fileSize = cfgFile->getFileSize();
     qDebug() << fileSize;
@@ -72,7 +76,7 @@ MainWindow::MainWindow(QWidget *parent) :
         cfgFile->writeCurrentDate(currentDate);
 
         // write current date and time to log.csv
-        csvFile->Append(currentDate + "," + startingTime + ",");
+        csvFile->WriteToFile(currentDate + "," + startingTime + ",");
     }
 
     else
@@ -169,9 +173,10 @@ MainWindow::~MainWindow()
 
     QString endTime = timeNow.currentTime().toString();
     int elapsedTime = timeNow.elapsed() / 1000; // seconds
+    QString buf = endTime + "," + QString::number(elapsedTime) + ",\n";
 
     // write current date and elapsed time to log.csv
-    csvFile->Append(endTime + "," + QString::number(elapsedTime) + ",\n");
+    csvFile->Append( buf );
 
     cfgFile->writeRemainingTime(remInt);
 

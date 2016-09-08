@@ -85,9 +85,11 @@ void FileManipulator::ReplaceLastLineButKeepFirst2Elements()
             int lastLineInt = RxData.size();
 
             lastLineInt = mFile->size() - lastLineInt;
-
+#ifdef __linux
             mFile->seek( lastLineInt - 1 );
-
+#elif _WIN32
+            mFile->seek( lastLineInt - 2 );
+#endif
             // keep first 2 elements from lastLine and then update the line
             readStreamer << bufList.at(0) + "," + bufList.at(1) + ",";
 
@@ -122,6 +124,7 @@ void FileManipulator::OpenFileForAppend()
 {
     if(!mFile->open(QIODevice::Append | QIODevice::Text))
     {
+        qWarning() << "Failed to open";
         qDebug() << "Couldn`t open the file";   // replace with messagebox
         return;
     }
