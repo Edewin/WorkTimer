@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#define static_Build
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -12,6 +14,23 @@ MainWindow::MainWindow(QWidget *parent) :
 
     qApp->setQuitLockEnabled(false); // another way to fix the bug(1) with
                                     //program crash when mainwindow is hidden
+
+#ifdef static_Build
+
+    QString fontPath = ":/Fonts/Fonts1.ttf";
+    int fontId = QFontDatabase::addApplicationFont(fontPath);
+
+    if(fontId != -1)
+    {
+        QFont font("Fonts1");
+        qApp->setFont(font);
+    }
+    else
+    {
+        qDebug() << "Can`t open the Fonts";
+    }
+
+#endif
 
     // FramelessWindowHint
     //setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::CustomizeWindowHint);
