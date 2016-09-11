@@ -1,7 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>imgs/arrows.png</file>
-        <file>imgs/mail.png</file>
         <file>imgs/admin.png</file>
         <file>imgs/alert.png</file>
         <file>imgs/boss.png</file>
@@ -12,20 +10,15 @@
         <file>imgs/home.png</file>
         <file>imgs/hourglass.png</file>
         <file>imgs/notepad.png</file>
-        <file>imgs/paper_mail.png</file>
         <file>imgs/paperTimer.png</file>
         <file>imgs/tick.png</file>
         <file>imgs/users.png</file>
         <file>imgs/TiMER-icon.png</file>
         <file>imgs/Clock02.png</file>
         <file>imgs/Clock-icon.png</file>
-        <file>imgs/flags/France.ico</file>
         <file>imgs/flags/France.png</file>
-        <file>imgs/flags/Germany.ico</file>
         <file>imgs/flags/Germany.png</file>
-        <file>imgs/flags/Romania.ico</file>
         <file>imgs/flags/Romania.png</file>
-        <file>imgs/flags/United-Kingdom.ico</file>
         <file>imgs/flags/United-Kingdom.png</file>
         <file>imgs/gifs/clear.gif</file>
         <file>imgs/gifs/cry.gif</file>
@@ -39,6 +32,6 @@
         <file>imgs/gifs/sleepy.gif</file>
         <file>imgs/gifs/tumblr_inline.gif</file>
         <file>imgs/gifs/wGDqq.gif</file>
-        <file>Fonts/Fonts1.ttf</file>
+        <file>Fonts/Aaargh.ttf</file>
     </qresource>
 </RCC>

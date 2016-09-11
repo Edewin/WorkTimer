@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 #ifdef static_Build
 
-    QString fontPath = ":/Fonts/Fonts1.ttf";
+    QString fontPath = ":/Fonts/Aaargh.ttf";
     int fontId = QFontDatabase::addApplicationFont(fontPath);
 
     if(fontId != -1)
