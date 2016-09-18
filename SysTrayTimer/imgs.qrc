@@ -1,12 +1,9 @@
 <RCC>
     <qresource prefix="/">
-        <file>imgs/admin.png</file>
         <file>imgs/alert.png</file>
         <file>imgs/boss.png</file>
         <file>imgs/calendar.png</file>
-        <file>imgs/comment.png</file>
         <file>imgs/disc-floopy.png</file>
-        <file>imgs/error.png</file>
         <file>imgs/home.png</file>
         <file>imgs/hourglass.png</file>
         <file>imgs/notepad.png</file>
@@ -22,16 +19,10 @@
         <file>imgs/flags/United-Kingdom.png</file>
         <file>imgs/gifs/clear.gif</file>
         <file>imgs/gifs/cry.gif</file>
-        <file>imgs/gifs/Foam-Heart.gif</file>
-        <file>imgs/gifs/friendfsgif</file>
         <file>imgs/gifs/giphy.gif</file>
-        <file>imgs/gifs/giphyElectric.gif</file>
-        <file>imgs/gifs/go.gif</file>
         <file>imgs/gifs/gohme.gif</file>
         <file>imgs/gifs/Golf-Ball.gif</file>
-        <file>imgs/gifs/sleepy.gif</file>
         <file>imgs/gifs/tumblr_inline.gif</file>
-        <file>imgs/gifs/wGDqq.gif</file>
         <file>Fonts/Aaargh.ttf</file>
     </qresource>
 </RCC>

@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#define static_Build
+//#define static_Build
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -282,8 +282,8 @@ void MainWindow::createActions()
     minimizeAction = new QAction(tr("Mi&nimize"), this);
     connect(minimizeAction, &QAction::triggered, this, &QWidget::hide);
 
-    maximizeAction = new QAction(tr("Ma&ximize"), this);
-    connect(maximizeAction, &QAction::triggered, this, &QWidget::showMaximized);
+//    maximizeAction = new QAction(tr("Ma&ximize"), this);
+//    connect(maximizeAction, &QAction::triggered, this, &QWidget::showMaximized);
 
     restoreAction = new QAction(tr("&Restore"), this);
     connect(restoreAction, &QAction::triggered, this, &QWidget::showNormal);
@@ -296,7 +296,7 @@ void MainWindow::createTrayIcon()
 {
     trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(minimizeAction);
-    trayIconMenu->addAction(maximizeAction);
+//    trayIconMenu->addAction(maximizeAction);
     trayIconMenu->addAction(restoreAction);
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(stringAction);
@@ -346,24 +346,24 @@ void MainWindow::addItemsToComboBoxes()
     // Add GIFs
 
     gifsList << ":/imgs/gifs/clear.gif" << ":/imgs/gifs/cry.gif"
-             << ":/imgs/gifs/Foam-Heart.gif" << ":/imgs/gifs/friendfsgif"
-             << ":/imgs/gifs/giphy.gif" <<  ":/imgs/gifs/giphyElectric.gif"
-             << ":/imgs/gifs/go.gif" << ":/imgs/gifs/gohme.gif"
-             << ":/imgs/gifs/Golf-Ball.gif" << ":/imgs/gifs/sleepy.gif"
-             << ":/imgs/gifs/tumblr_inline.gif" << ":/imgs/gifs/wGDqq.gif";
+//             << ":/imgs/gifs/Foam-Heart.gif" << ":/imgs/gifs/friendfsgif"
+             << ":/imgs/gifs/giphy.gif" /*<<  ":/imgs/gifs/giphyElectric.gif"*/
+            /* << ":/imgs/gifs/go.gif"*/ << ":/imgs/gifs/gohme.gif"
+             << ":/imgs/gifs/Golf-Ball.gif" /*<< ":/imgs/gifs/sleepy.gif"*/
+             << ":/imgs/gifs/tumblr_inline.gif" /*<< ":/imgs/gifs/wGDqq.gif"*/;
 
     ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/clear.gif"), tr("clear"));
     ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/cry.gif"), tr("cry"));
-    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/Foam-Heart.gif"), tr("heart coffee"));
-    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/friendfsgif"), tr("friends fan"));
+//    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/Foam-Heart.gif"), tr("heart coffee"));
+//    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/friendfsgif"), tr("friends fan"));
     ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/giphy.gif"), tr("giphy"));
-    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/giphyElectric.gif"), tr("electric"));
-    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/go.gif"), tr("just go"));
+//    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/giphyElectric.gif"), tr("electric"));
+//    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/go.gif"), tr("just go"));
     ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/gohme.gif"), tr("go home"));
     ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/Golf-Ball.gif"), tr("golf"));
-    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/sleepy.gif"), tr("sleepy"));
+//    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/sleepy.gif"), tr("sleepy"));
     ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/tumblr_inline.gif"), tr("woman"));
-    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/wGDqq.gif"), tr("work done"));
+//    ui->comboBox_Gifs->addItem(QIcon(":/imgs/gifs/wGDqq.gif"), tr("work done"));
 }
 
 int MainWindow::getTimeToCount(int hrs)
