@@ -33,7 +33,8 @@ MainWindow::MainWindow(QWidget *parent) :
 #endif
 
     // FramelessWindowHint
-    //setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::CustomizeWindowHint);
+    Qt::WindowFlags flags = this->windowFlags();
+    this->setWindowFlags(flags | Qt::X11BypassWindowManagerHint | Qt::WindowStaysOnTopHint);
 
     // get current time and time to count
     hours = ui->doubleSpinBox_Hours->value();
@@ -316,6 +317,7 @@ void MainWindow::timeToGoHome()
     homeUI->gifContainer->setMovie(homeUI->gif);
     homeUI->gif->start();
     homeUI->setOrientation(Qt::Vertical);
+//    homeUI->setWindowFlags(Qt::WindowStaysOnTopHint);
 
     if(homeUI->exec())
     {
@@ -466,6 +468,7 @@ void MainWindow::on_gifTestButton_clicked()
     homeUI->gifContainer->setMovie(homeUI->gif);
     homeUI->gif->start();
     homeUI->setOrientation(Qt::Vertical);
+//    homeUI->setWindowFlags(Qt::WindowStaysOnTopHint);
 
     if(homeUI->exec())
     {

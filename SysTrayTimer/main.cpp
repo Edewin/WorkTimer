@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 
    // a.setQuitOnLastWindowClosed(false); // bug(1) fix
 
-    w.show();
+//    w.show();
 
     return a.exec();
 }
